@@ -2,65 +2,71 @@
 #include <stdlib.h>
 
 typedef struct{
-    int day;
-    int month;
-    int year;
+    int Day;
+    int Month;
+    int Year;
 }Time;
 
-char* TimeToString(Time time){
+char* Time_ToString(Time time){
     char* TimeString = malloc(sizeof(char) * 15);
     char Bridge[8];
 
-    sprintf(Bridge, "%d/", time.day);
+    sprintf(Bridge, "%d/", time.Day);
     strcpy(TimeString, Bridge);
-    sprintf(Bridge, "%d/", time.month);
+    sprintf(Bridge, "%d/", time.Month);
     strcat(TimeString, Bridge);
-    sprintf(Bridge, "%d", time.year);
+    sprintf(Bridge, "%d", time.Year);
     strcat(TimeString, Bridge);
 
     return TimeString;
 }
 
-int CheckTime(Time time){
-    if(time.month < 1 || time.month > 12)   return 0;
-	if(time.day < 1 || time.day > 31) 	    return 0;
-	if(time.year < 0) 				        return 0;
+int Time_Check(Time time){
+    if(time.Month < 1 || time.Month > 12)   return 0;
+	if(time.Day < 1 || time.Day > 31) 	    return 0;
+	if(time.Year < 0) 				        return 0;
 
-	if (time.month==4||time.month==6||time.month==9||time.month==11)
-		if(time.day > 30) return 0;
-    if((time.year % 4 == 0) && (time.year % 100 != 0) || (time.year % 400 == 0)){
-		if(time.month == 2)
-			if(time.day > 29) return 0;
+	if (time.Month==4||time.Month==6||time.Month==9||time.Month==11)
+		if(time.Day > 30) return 0;
+    if((time.Year % 4 == 0) && (time.Year % 100 != 0) || (time.Year % 400 == 0)){
+		if(time.Month == 2)
+			if(time.Day > 29) return 0;
 	}
-	else if(time.month == 2)
-		if(time.day > 28) return 0;
+	else if(time.Month == 2)
+		if(time.Day > 28) return 0;
 
 	return 1;
 }
 
-int CompareTime(Time Time1, Time Time2)
+int Time_Compare(Time Time1, Time Time2)
 {
-    if(Time1.year == Time2.year)
+    if(Time1.Year == Time2.Year)
     {
-        if(Time1.month == Time2.month)
+        if(Time1.Month == Time2.Month)
         {
-            if(Time1.day == Time2.day)      return  0;
-            else if(Time1.day > Time2.day)  return  1;
-            else if(Time1.day < Time2.day)  return -1;
+            if(Time1.Day == Time2.Day)      return  0;
+            else if(Time1.Day > Time2.Day)  return  1;
+            else if(Time1.Day < Time2.Day)  return -1;
         }
-        else if(Time1.month > Time2.month)  return  1;
-        else if(Time1.month < Time2.month)  return -1;
+        else if(Time1.Month > Time2.Month)  return  1;
+        else if(Time1.Month < Time2.Month)  return -1;
     }
-    else if(Time1.year > Time2.year)        return  1;
-    else if(Time1.year < Time2.year)        return -1;
+    else if(Time1.Year > Time2.Year)        return  1;
+    else if(Time1.Year < Time2.Year)        return -1;
 }
 
-Time ReturnTime(int day, int month, int year){
-    Time time = {day, month, year};
+void Time_Copy(Time *time1, Time time2){
+    time1->Day = time2.Day;
+    time1->Month = time2.Month;
+    time1->Year = time2.Year;
+}
+
+Time Time_New(int Day, int Month, int Year){
+    Time time = {Day, Month, Year};
     return time;
 }
 
-Time NullTime(){
+Time Time_Null(){
     Time time = {0, 0, 0};
     return time;
 }
