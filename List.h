@@ -153,27 +153,34 @@ Reservation* GetReservation(int Selection){
     }
 }
 
-/*
-Revisar esta funcion, que es muy importante
-para poder eliminar los usuarios de las
-reservaciones posteriormente, cuando el sis-
-tema este mas completo.
-
 void DeleteReservation(int Selection){
-    Selection--;
-    if(Selection < 0 || Selection > ReservationQuantity)
+    Reservation *Pointer = NULL;
+
+    if(Selection < 1 || Selection > ReservationQuantity){
         return;
-    else if(Selection == 1){
-
-    }else if(Selection == Reser){
-
     }
-    Reservation *Pointer = FirstReservation;
-    for(int i = 0; i < Selection; i++)
-        Pointer = Pointer->Next;
-    Pointer->Previous->Next = Pointer->Next;
-    Pointer->Next->Previous = Pointer->Previous;
-    ReservationQuantity--;
-    free(Pointer);
+    else if(Selection - 1 == 0){
+        Pointer = FirstReservation;
+        Pointer->Next->Previous = NULL;
+        FirstReservation = FirstReservation->Next;
+        free(Pointer);
+        ReservationQuantity--;
+    }
+    else if(Selection == ReservationQuantity){
+        Pointer = LastReservation;
+        Pointer->Previous->Next = NULL;
+        LastReservation = LastReservation->Previous;
+        free(Pointer);
+        ReservationQuantity--;
+    }
+    else{
+        Pointer = FirstReservation;
+        for(int i = 0; i < Selection - 1; i++){
+            Pointer = Pointer->Next;
+        }
+        Pointer->Next->Previous = Pointer->Previous;
+        Pointer->Previous->Next = Pointer->Next;
+        free(Pointer);
+        ReservationQuantity--;
+    }
 }
-/*
