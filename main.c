@@ -1,9 +1,10 @@
-#include <stdio.h>
 #include "Reservation.h"
+#include "Application.h"
+
 
 int main(void){
-    Reservation_File_Load();
-    Reservation_Show_All();
-    printf("RQ: %d\n", ReservationQuantity);
+    Time time = Time_New(13,7,1997);
+    Time_Set_Day(&time, 21);
+    puts(Time_ToString(time));
     return 0;
 }

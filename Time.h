@@ -1,5 +1,9 @@
+#ifndef TIME_H
+#define TIME_H
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct{
     int Day;
@@ -70,3 +74,11 @@ Time Time_Null(){
     Time time = {0, 0, 0};
     return time;
 }
+
+//-------------------Setters and Getters---------------------
+
+void Time_Set_Day(Time * time, int Day){
+    time->Day = Day;
+}
+
+#endif /* TIME_H */

@@ -1,3 +1,6 @@
+#ifndef RESERVATION_H
+#define RESERVATION_H
+
 #include <string.h>
 #include <stdlib.h>
 #include "Time.h"
@@ -100,8 +103,29 @@ void Reservation_File_Save(){
 }
 
 void Reservation_File_Load(){
-    Reservation_Memory_Clear();
+    //Check existence of file
+    FILE* file = fopen("reserva.in", "r");
+    if(file == NULL){
+        fclose(file);
+        file = fopen("reserva.in", "w");
+        fclose(file);
+        file = fopen("reserva.in", "r");
+    }
+    //Check content file
+    int count = 0;
+    while(!feof(file)){
+        fgetc(file);
+        count++;
+    } 
+    
+    if(count == 1)
+        return;
+    else{
+        rewind(file);
+        Reservation_Memory_Clear();
+    }
 
+    //Start to read file
     char    Name[30];
     char    LastName[30];
     int     CI;
@@ -109,7 +133,6 @@ void Reservation_File_Load(){
     Time    Output;
     int     Number;
 
-    FILE* file = fopen("reserva.in", "r");
     while(!feof(file)){
         //read values
         fscanf(file, "%s %s %d\t", Name, LastName, &CI);
@@ -295,3 +318,4 @@ void Reservation_Set_Number(int Selection, int Number){
         return;
     reservation->Number = Number;
 }
+#endif /* RESERVATION_H */
