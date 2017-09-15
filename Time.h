@@ -81,4 +81,24 @@ void Time_Set_Day(Time * time, int Day){
     time->Day = Day;
 }
 
+void Time_Set_Month(Time * time, int Month){
+    time->Month = Month;
+}
+
+void Time_Set_Year(Time * time, int Year){
+    time->Year = Year;
+}
+
+int Time_Get_Day(Time * time){
+    return time->Day;
+}
+
+int Time_Get_Month(Time * time){
+    return time->Month;
+}
+
+int Time_Get_Year(Time * time){
+    return time->Year;
+}
+
 #endif /* TIME_H */
