@@ -20,4 +20,8 @@ void Console_Clear(){
     system("cls");
 }
 
+void Console_Pause(){
+	while(getchar()!= '\n');
+}
+
 #endif /* CONSOLE_H */

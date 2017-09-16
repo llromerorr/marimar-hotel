@@ -157,10 +157,7 @@ void Reservation_File_Load(){
         CI = 0;
         Number = 0;
         strcpy(PayType, "none");
-        //Increse ReservationQuantity
-        ReservationQuantity++;
     }
-    ReservationQuantity--;
     fclose(file);
 }
 

@@ -116,6 +116,8 @@ void Charge_File_Load(){
     while(!feof(file)){
         fgetc(file);
         count++;
+        if(count > 1)
+            break;
     } 
     
     if(count == 1)
@@ -128,13 +130,13 @@ void Charge_File_Load(){
     //Start to read file
     int     CI;
     Time    TimeCharge;
-    char    Type[30];
+    char    Type[50];
     int     Cost;
 
     while(!feof(file)){
         //read values
         fscanf(file, "%d\t", &CI);
-        fscanf(file, "%d/%d/%d\t", &TimeCharge.Day, &TimeCharge.Month, &TimeCharge.Year);
+        fscanf(file, "%d/%d/%d ", &TimeCharge.Day, &TimeCharge.Month, &TimeCharge.Year);
         fscanf(file,"%s\t", Type);
         fscanf(file,"%d\n", &Cost);
         //save in memory
@@ -144,10 +146,7 @@ void Charge_File_Load(){
         TimeCharge = Time_Null();
         strcpy(Type, "none");
         Cost = 0;
-        //Increse ChargeQuantity
-        ChargeQuantity++;
     }
-    ChargeQuantity--;
     fclose(file);
 }
 
@@ -156,7 +155,7 @@ void Charge_File_Clear(){
     fclose(file);
 }
 
-void Charge_Delete_ChargeByNumber(int Selection){
+void Charge_Delete_ByNumber(int Selection){
     Charge *Pointer = NULL;
 
     if(Selection < 1 || Selection > ChargeQuantity){
@@ -194,7 +193,7 @@ void Charge_Delete_ChargeByNumber(int Selection){
     }
 }
 
-void Charge_Delete_ChargeByPointer(Charge * Selection){
+void Charge_Delete_ByPointer(Charge * Selection){
     if(Selection == NULL){
         return;
     }
@@ -221,6 +220,12 @@ void Charge_Delete_ChargeByPointer(Charge * Selection){
         Selection->Previous->Next = Selection->Next;
         free(Selection);
         ChargeQuantity--;
+    }
+}
+
+void Charge_Delete_ByAllPointers(Charge ** Selection){
+    for(int i = 0; Selection[i]; i++){
+        Charge_Delete_ByPointer(Selection[i]);
     }
 }
 
@@ -311,11 +316,10 @@ void Charge_Set_Cost(int Selection, int Cost){
 
 //-------------------Search and Find---------------------
 
-Charge ** Charge_Search_CIByPointer(int CI){
+Charge ** Charge_Search_CI_ByAllPointers(int CI){
     Charge * Pointer = Charge_FirstCharge;
     Charge ** Found = (Charge**) malloc(sizeof(Charge*));
     int FoundQuantity = 0;
-
 
     while(Pointer){
         if(Pointer->CI == CI){
