@@ -1,7 +1,6 @@
-#include "Reservation.h"
-#include "Charge.h"
-#include "Application.h"
-
+#include "headers/Reservation.h"
+#include "headers/Charge.h"
+#include "headers/Application.h"
 
 int main(void){
     Charge_File_Load();
