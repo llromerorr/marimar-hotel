@@ -69,6 +69,15 @@ void Charge_Show_All_Reversed(){
     }
 }
 
+void Charge_Show_Charge(Charge* charge){
+    if(!charge)
+        return;
+    printf("%d\t", charge->CI);
+    printf("%s\t", Time_ToString(charge->TimeCharge));
+    printf("%s\t", charge->Type);
+    printf("%d\n", charge->Cost);
+}
+
 void Charge_Memory_Clear(){
     Charge* p = Charge_FirstCharge;
     while(p){
@@ -100,7 +109,7 @@ void Charge_File_Load(){
         fclose(file);
         file = fopen("cargos.txt", "w");
         fclose(file);
-        file = fopen("cargos.txt", "r");
+        return;
     }
     //Check content file
     int count = 0;
@@ -127,7 +136,7 @@ void Charge_File_Load(){
         fscanf(file, "%d\t", &CI);
         fscanf(file, "%d/%d/%d\t", &TimeCharge.Day, &TimeCharge.Month, &TimeCharge.Year);
         fscanf(file,"%s\t", Type);
-        fscanf(file,"%d\n", Cost);
+        fscanf(file,"%d\n", &Cost);
         //save in memory
         Charge_New(CI, TimeCharge, Type, Cost);
         //reset values of variables in function    
@@ -147,7 +156,7 @@ void Charge_File_Clear(){
     fclose(file);
 }
 
-void Charge_Delete_Charge(int Selection){
+void Charge_Delete_ChargeByNumber(int Selection){
     Charge *Pointer = NULL;
 
     if(Selection < 1 || Selection > ChargeQuantity){
@@ -181,6 +190,36 @@ void Charge_Delete_Charge(int Selection){
         Pointer->Next->Previous = Pointer->Previous;
         Pointer->Previous->Next = Pointer->Next;
         free(Pointer);
+        ChargeQuantity--;
+    }
+}
+
+void Charge_Delete_ChargeByPointer(Charge * Selection){
+    if(Selection == NULL){
+        return;
+    }
+    else if(Selection == Charge_FirstCharge){
+        if(ChargeQuantity == 1){
+            Charge_FirstCharge = NULL;
+            Charge_LastCharge = NULL;
+        }
+        else{
+            Selection->Next->Previous = NULL;
+            Charge_FirstCharge = Charge_FirstCharge->Next;
+        }
+        free(Selection);
+        ChargeQuantity--;
+    }
+    else if(Selection == Charge_LastCharge){
+        Selection->Previous->Next = NULL;
+        Charge_LastCharge = Charge_LastCharge->Previous;
+        free(Selection);
+        ChargeQuantity--;
+    }
+    else{
+        Selection->Next->Previous = Selection->Previous;
+        Selection->Previous->Next = Selection->Next;
+        free(Selection);
         ChargeQuantity--;
     }
 }
@@ -272,13 +311,22 @@ void Charge_Set_Cost(int Selection, int Cost){
 
 //-------------------Search and Find---------------------
 
-Charge * Charge_Search_CI(int CI){
-    Charge* p = Charge_FirstCharge;
-    while(p){
-        if(p->CI == CI)
-            return p;
-        p = p->Next;
+Charge ** Charge_Search_CIByPointer(int CI){
+    Charge * Pointer = Charge_FirstCharge;
+    Charge ** Found = (Charge**) malloc(sizeof(Charge*));
+    int FoundQuantity = 0;
+
+
+    while(Pointer){
+        if(Pointer->CI == CI){
+            Found[FoundQuantity] = Pointer;
+            FoundQuantity++;
+            Found = realloc(Found, sizeof(Charge*) * (FoundQuantity + 1));
+        }
+        Pointer = Pointer->Next;
     }
+    Found[FoundQuantity] = NULL;
+    return Found;
 }
 
 #endif /* CHARGE_H */

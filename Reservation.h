@@ -115,7 +115,7 @@ void Reservation_File_Load(){
         fclose(file);
         file = fopen("reserva.in", "w");
         fclose(file);
-        file = fopen("reserva.in", "r");
+        return;
     }
     //Check content file
     int count = 0;
