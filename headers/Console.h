@@ -21,6 +21,7 @@ void Console_Clear(){
 }
 
 void Console_Pause(){
+	printf("\t");
 	while(getchar()!= '\n');
 }
 

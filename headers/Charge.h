@@ -316,6 +316,16 @@ void Charge_Set_Cost(int Selection, int Cost){
 
 //-------------------Search and Find---------------------
 
+int Charge_Search_CI(int CI){
+    Charge * Pointer = Charge_FirstCharge;
+    while(Pointer){
+        if(Pointer->CI == CI)
+            return 1;
+        Pointer = Pointer->Next;
+    }
+    return 0;
+}
+
 Charge ** Charge_Search_CI_ByAllPointers(int CI){
     Charge * Pointer = Charge_FirstCharge;
     Charge ** Found = (Charge**) malloc(sizeof(Charge*));

@@ -15,11 +15,11 @@ char* Time_ToString(Time time){
     char* TimeString = malloc(sizeof(char) * 15);
     char Bridge[8];
 
-    sprintf(Bridge, "%d/", time.Day);
+    sprintf(Bridge, "%.2d/", time.Day);
     strcpy(TimeString, Bridge);
-    sprintf(Bridge, "%d/", time.Month);
+    sprintf(Bridge, "%.2d/", time.Month);
     strcat(TimeString, Bridge);
-    sprintf(Bridge, "%d", time.Year);
+    sprintf(Bridge, "%.4d", time.Year);
     strcat(TimeString, Bridge);
 
     return TimeString;

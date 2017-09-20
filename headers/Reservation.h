@@ -57,15 +57,24 @@ void Reservation_New_Null(){
     Reservation_New("none", "none", 0, Time_Null(), Time_Null(), 0, "none");
 }
 
+void Reservation_Show(Reservation * p){
+        printf("\tNombre Completo:\t%s %s\n",p->Name,p->LastName);
+        printf("\tCI:\t\t\t%d\n", p->CI);
+        printf("\tFecha Inicio:\t\t%s\n", Time_ToString(p->Input));
+        printf("\tFecha Salida:\t\t%s\n",Time_ToString(p->Output));
+        printf("\tHabitacion:\t\t%d\n", p->Number);
+        printf("\tTipo de pago:\t\t%s\n", p->PayType);
+}
+
 void Reservation_Show_All(){
     Reservation* p = Reservation_FirstReservation;
     for(int i = 1; p; i++){
-        printf("%d) ", i);
-        printf("%s %s\t",p->Name,p->LastName);
-        printf("%d\t", p->CI);
-        printf("%s\t%s\t", Time_ToString(p->Input), Time_ToString(p->Output));
-        printf("%d\t", p->Number);
-        printf("%s\n", p->PayType);
+        printf("\t%-5d ", i);
+        printf("%-15s %-15s ",p->Name,p->LastName);
+        printf("%-10d ", p->CI);
+        printf("%-15s %-15s ", Time_ToString(p->Input), Time_ToString(p->Output));
+        printf("%-8.2d ", p->Number);
+        printf("%-10s\n", p->PayType);
         p = p->Next;
     }
 }
@@ -217,130 +226,86 @@ Reservation* Reservation_Get_Reservation(int Selection){
     }
 }
 
-char* Reservation_Get_Name(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return NULL;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->Name;
-    }
+char* Reservation_Get_Name(Reservation * Pointer){
+    return Pointer->Name;
 }
 
-char* Reservation_Get_LastName(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return NULL;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->LastName;
-    }
+char* Reservation_Get_LastName(Reservation * Pointer){
+    return Pointer->LastName;
 }
 
-int Reservation_Get_CI(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return 0;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->CI;
-    }
+int Reservation_Get_CI(Reservation * Pointer){
+    return Pointer->CI;
 }
 
-Time Reservation_Get_TimeInput(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return Time_Null();
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
+Time Reservation_Get_TimeInput(Reservation * Pointer){
         return Pointer->Input;
-    }
 }
 
-Time Reservation_Get_TimeOutput(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return Time_Null();
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->Output;
-    }
+Time Reservation_Get_TimeOutput(Reservation * Pointer){
+    return Pointer->Output;
 }
 
-int Reservation_Get_Number(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return 0;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->Number;
-    }
+int Reservation_Get_Number(Reservation * Pointer){
+    return Pointer->Number;
 }
 
-char* Reservation_Get_PayType(int Selection){
-    Reservation *Pointer = Reservation_FirstReservation;
-    if(Selection < 1 || Selection > ReservationQuantity)
-        return NULL;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->PayType;
-    }
+char* Reservation_Get_PayType(Reservation * Pointer){
+    return Pointer->PayType;
 }
 
-void Reservation_Set_Name(int Selection, char* Name){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_Name(Reservation* reservation, char* Name){
     if(reservation == NULL)
         return;
     strcpy(reservation->Name, Name);
 }
 
-void Reservation_Set_LastName(int Selection, char* LastName){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_LastName(Reservation * reservation, char* LastName){
     if(reservation == NULL)
         return;
     strcpy(reservation->LastName, LastName);
 }
 
-void Reservation_Set_CI(int Selection, int CI){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_CI(Reservation * reservation, int CI){
     if(reservation == NULL)
         return;
     reservation->CI = CI;
 }
 
-void Reservation_Set_TimeInput(int Selection, Time time){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_TimeInput(Reservation * reservation, Time time){
     if(reservation == NULL)
         return;
     Time_Copy(&reservation->Input, time);
 }
 
-void Reservation_Set_TimeOutput(int Selection, Time time){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_TimeOutput(Reservation * reservation, Time time){
     if(reservation == NULL)
         return;
     Time_Copy(&reservation->Output, time);
 }
 
-void Reservation_Set_Number(int Selection, int Number){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_Number(Reservation * reservation, int Number){
     if(reservation == NULL)
         return;
     reservation->Number = Number;
 }
 
-void Reservation_Set_PayType(int Selection, char* PayType){
-    Reservation * reservation = Reservation_Get_Reservation(Selection);
+void Reservation_Set_PayType(Reservation * reservation, char* PayType){
     if(reservation == NULL)
         return;
     strcpy(reservation->PayType, PayType);
+}
+
+//-------------------Search and Find---------------------
+
+Reservation* Reservation_Search_CI(int CI){
+    Reservation * Pointer = Reservation_FirstReservation;
+    while(Pointer){
+        if(Pointer->CI == CI)
+            return Pointer;
+        Pointer = Pointer->Next;
+    }
+    return NULL;
 }
 
 #endif /* RESERVATION_H */
