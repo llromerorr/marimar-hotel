@@ -130,11 +130,9 @@ int Application_Menu_Main(){
 	ScreenResource_DivitionBar_Double(62,1,0);
 	printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
 	printf("\t\t\t        FACYT COMPUTACION\n");
-	//printf("\t\t\t            21/09/17\n");
 	ScreenResource_DivitionBar_Double(62,1,2);
-	printf("\t\t\t       MENU PRINCIPAL\n");
 
-	printf("\n\tOPCIONES\t\t\t\tTOTALES\n");
+	printf("\tOPCIONES\t\t\t\tTOTALES\n");
 	//ScreenResource_DivitionBar(22,6,0);
 	printf("\n\t[1] RESERVACIONES\t\t\t%-6d RESERVADAS\n", ReservationQuantity); 
 	printf("\t[2] HUESPEDES\t\t\t\t%-6d OCUPADAS\n", GuestQuantity);
@@ -178,10 +176,11 @@ int Application_Menu_Reservation(){
 		Reservation_File_Load();
 		int Selection = 0;
 		Console_Clear();
-		printf("\n\t==========================================");
-		printf("\n\t   SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
-		printf("\n\t            >|RESERVACIONES|<");
-		printf("\n\t==========================================\n");
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t        -> RESERVACIONES <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
 		printf("\n\t             CREAR O BUSCAR\n");
 		printf("\n\tIntroduce una Cedula  de  Identidad, para\n");
 		printf("\tcomenzar a buscar, y si no existe crearla.\n\n");
