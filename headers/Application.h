@@ -53,6 +53,38 @@ void Application_Message_Error(){
 	Application_Pause();
 }
 
+//-----------------------SCREENS----------------------
+
+void Application_Menu_Welcome(){
+	printf("\n\t       Sistema desarrolado en 2017, FACYT COMPUTACION\n");
+	printf("\t--------------------------------------------------------------\n\n");
+	printf("\t	   @@   @@      @    @@@@@@@  @@@@@  @@    \n");
+	printf("\t	   @@   @@    @@@@@  @@@@@@@  @@@@@  @@    \n");
+	printf("\t	   @@   @@   @@   @@    @@    @@     @@    \n");
+	printf("\t	   @@   @@  @@     @@   @@    @@     @@    \n");
+	printf("\t	   @@@@@@@  @@     @@   @@    @@@@@  @@    \n");
+	printf("\t	   @@@@@@@  @@     @@   @@    @@@@@  @@    \n");
+	printf("\t	   @@   @@  @@     @@   @@    @@     @@    \n");
+	printf("\t	   @@   @@  @@    @@    @@    @@     @@    \n");
+	printf("\t	   @@   @@   @@@@@@@    @@    @@@@@  @@@@@@\n");
+	printf("\t	   @@   @@    @@@@      @@    @@@@@  @@@@@@\n\n");
+	
+	printf("\t@@@    @@@     @     @@@@@   @@  @@@    @@@     @     @@@@@\n");
+	printf("\t@@@@   @@@    @ @    @@  @@@ @@  @@@@   @@@    @ @    @@  @@@\n");
+	printf("\t@@ @  @@@@   @@ @@   @@   @@ @@  @@ @  @@@@   @@ @@   @@   @@\n");
+	printf("\t@@ @  @ @@  @@   @@  @@   @@ @@  @@ @  @ @@  @@   @@  @@   @@\n");
+	printf("\t@@ @@ @ @@  @@   @@  @@  @@  @@  @@ @@ @ @@  @@   @@  @@  @@\n");
+	printf("\t@@ @@ @ @@  @@   @@  @@@@@   @@  @@ @@ @ @@  @@   @@  @@@@@\n");
+	printf("\t@@  @@  @@  @@@@@@@  @@  @@  @@  @@  @@@ @@  @@@@@@@  @@  @@\n");
+	printf("\t@@  @@  @@  @@   @@  @@   @@ @@  @@  @@  @@  @@   @@  @@   @@\n");
+	printf("\t@@  @@  @@  @@   @@  @@   @@ @@  @@  @@  @@  @@   @@  @@   @@\n");
+	printf("\t@@      @@  @@   @@  @@   @@ @@  @@      @@  @@   @@  @@   @@\n\n");
+	printf("\t--------------------------------------------------------------\n");
+	printf("\t   Si tiene algun problema en poder visualar esta pantalla \n");
+	printf("\t    redimesione la consola, presione ENTER para continuar\n");
+	Console_Pause();
+	}
+
 //-----------------------MENUS-----------------------
 
 int Application_Menu_Main(){

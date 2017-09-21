@@ -3,6 +3,7 @@
 #include "headers/Application.h"
 
 int main(void){
+    Application_Menu_Welcome();
 
     while(Application_Menu_Main());
     
