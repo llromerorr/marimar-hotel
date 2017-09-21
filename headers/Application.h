@@ -13,6 +13,8 @@ int Application_Menu_Reservation();
 void Application_Menu_Reservation_ShowAll();
 int Application_Menu_Reservation_New(int CI);
 int Application_Menu_Reservation_Edit(Reservation * Pointer);
+void ScreenResource_DivitionBar();
+void ScreenResource_TopBar();
 
 //----------------------FUNCTIONS------------------------
 
@@ -56,49 +58,81 @@ void Application_Message_Error(){
 //-----------------------SCREENS----------------------
 
 void Application_Menu_Welcome(){
-	printf("\n\t       Sistema desarrolado en 2017, FACYT COMPUTACION\n");
-	printf("\t--------------------------------------------------------------\n\n");
-	printf("\t	   @@   @@      @    @@@@@@@  @@@@@  @@    \n");
-	printf("\t	   @@   @@    @@@@@  @@@@@@@  @@@@@  @@    \n");
-	printf("\t	   @@   @@   @@   @@    @@    @@     @@    \n");
-	printf("\t	   @@   @@  @@     @@   @@    @@     @@    \n");
-	printf("\t	   @@@@@@@  @@     @@   @@    @@@@@  @@    \n");
-	printf("\t	   @@@@@@@  @@     @@   @@    @@@@@  @@    \n");
-	printf("\t	   @@   @@  @@     @@   @@    @@     @@    \n");
-	printf("\t	   @@   @@  @@    @@    @@    @@     @@    \n");
-	printf("\t	   @@   @@   @@@@@@@    @@    @@@@@  @@@@@@\n");
-	printf("\t	   @@   @@    @@@@      @@    @@@@@  @@@@@@\n\n");
-	
-	printf("\t@@@    @@@     @     @@@@@   @@  @@@    @@@     @     @@@@@\n");
-	printf("\t@@@@   @@@    @ @    @@  @@@ @@  @@@@   @@@    @ @    @@  @@@\n");
-	printf("\t@@ @  @@@@   @@ @@   @@   @@ @@  @@ @  @@@@   @@ @@   @@   @@\n");
-	printf("\t@@ @  @ @@  @@   @@  @@   @@ @@  @@ @  @ @@  @@   @@  @@   @@\n");
-	printf("\t@@ @@ @ @@  @@   @@  @@  @@  @@  @@ @@ @ @@  @@   @@  @@  @@\n");
-	printf("\t@@ @@ @ @@  @@   @@  @@@@@   @@  @@ @@ @ @@  @@   @@  @@@@@\n");
-	printf("\t@@  @@  @@  @@@@@@@  @@  @@  @@  @@  @@@ @@  @@@@@@@  @@  @@\n");
-	printf("\t@@  @@  @@  @@   @@  @@   @@ @@  @@  @@  @@  @@   @@  @@   @@\n");
-	printf("\t@@  @@  @@  @@   @@  @@   @@ @@  @@  @@  @@  @@   @@  @@   @@\n");
-	printf("\t@@      @@  @@   @@  @@   @@ @@  @@      @@  @@   @@  @@   @@\n\n");
-	printf("\t--------------------------------------------------------------\n");
-	printf("\t   Si tiene algun problema en poder visualar esta pantalla \n");
-	printf("\t    redimesione la consola, presione ENTER para continuar\n");
+	printf("\n");
+	ScreenResource_DivitionBar();
+	printf("\n");
+	printf("\t	   %c%c   %c%c      %c    %c%c%c%c%c%c%c  %c%c%c%c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c   %c%c    %c%c%c%c%c  %c%c%c%c%c%c%c  %c%c%c%c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219);
+	printf("\t	   %c%c   %c%c   %c%c   %c%c    %c%c    %c%c     %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c   %c%c  %c%c     %c%c   %c%c    %c%c     %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c%c%c%c%c%c  %c%c     %c%c   %c%c    %c%c%c%c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c%c%c%c%c%c  %c%c     %c%c   %c%c    %c%c%c%c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c   %c%c  %c%c     %c%c   %c%c    %c%c     %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c   %c%c  %c%c    %c%c    %c%c    %c%c     %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t	   %c%c   %c%c   %c%c%c%c%c%c%c    %c%c    %c%c%c%c%c  %c%c%c%c%c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219);
+	printf("\t	   %c%c   %c%c    %c%c%c%c      %c%c    %c%c%c%c%c  %c%c%c%c%c%c\n\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t%c%c%c    %c%c%c     %c     %c%c%c%c%c   %c%c  %c%c%c    %c%c%c     %c     %c%c%c%c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219);
+	printf("\t%c%c%c%c   %c%c%c    %c %c    %c%c  %c%c%c %c%c  %c%c%c%c   %c%c%c    %c %c    %c%c  %c%c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219);
+	printf("\t%c%c %c  %c%c%c%c   %c%c %c%c   %c%c   %c%c %c%c  %c%c %c  %c%c%c%c   %c%c %c%c   %c%c   %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219,219,219);
+	printf("\t%c%c %c  %c %c%c  %c%c   %c%c  %c%c   %c%c %c%c  %c%c %c  %c %c%c  %c%c   %c%c  %c%c   %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219);
+	printf("\t%c%c %c%c %c %c%c  %c%c   %c%c  %c%c  %c%c  %c%c  %c%c %c%c %c %c%c  %c%c   %c%c  %c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219,219,219);
+	printf("\t%c%c %c%c %c %c%c  %c%c   %c%c  %c%c%c%c%c   %c%c  %c%c %c%c %c %c%c  %c%c   %c%c  %c%c%c%c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219,219,219,219,219);
+	printf("\t%c%c  %c%c  %c%c  %c%c%c%c%c%c%c  %c%c  %c%c  %c%c  %c%c  %c%c%c %c%c  %c%c%c%c%c%c%c  %c%c  %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219,219,219,219,219,219,219,219);
+	printf("\t%c%c  %c%c  %c%c  %c%c   %c%c  %c%c   %c%c %c%c  %c%c  %c%c  %c%c  %c%c   %c%c  %c%c   %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219);
+	printf("\t%c%c  %c%c  %c%c  %c%c   %c%c  %c%c   %c%c %c%c  %c%c  %c%c  %c%c  %c%c   %c%c  %c%c   %c%c\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,
+	219,219,219,219);
+	printf("\t%c%c      %c%c  %c%c   %c%c  %c%c   %c%c %c%c  %c%c      %c%c  %c%c   %c%c  %c%c   %c%c\n\n",
+	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+
+	ScreenResource_DivitionBar();
+	printf("\t   Si tiene algun problema en poder visualizar esta pantalla \n");
+	printf("\t    redimensione la consola, presione ENTER para continuar\n");
 	Console_Pause();
-	}
+}
 
 //-----------------------MENUS-----------------------
 
 int Application_Menu_Main(){
 	int Selection = 0;
-
+	Reservation_File_Load();
 	Console_Clear();
-	printf("\n\t==========================================\n");
-	printf("                  Sistema administrativo\n");
-	printf("                       Hotel Marimar\n");
-	printf("                     Facyt Computacion\n");
-	printf("                           2017");
-	printf("\n\t==========================================\n");
-	printf("\n                      MENU PRINCIPAL\n\n");
-	puts("\t[1] Reservaciones");
+	puts("");
+	ScreenResource_DivitionBar();
+	printf("\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+	printf("\t\t\t        FACYT COMPUTACION\n");
+	printf("\t\t\t           BIENVENIDO\n");
+	ScreenResource_DivitionBar();
+	//printf("\n\t\t\t         MENU PRINCIPAL\n\n");
+	puts("\n\t[1] Reservaciones");
 	puts("\t[2] Huespedes");
 	puts("\t[3] Servicios Especiales");
 	puts("\t[4] Salida de Huespedes");
@@ -336,4 +370,19 @@ void Application_Menu_Reservation_ShowAll(){
 	Application_Menu_Reservation_Edit(Reservation_Get_Reservation(Selection));
 }
 
+//==============================================================================
+
+void ScreenResource_DivitionBar(){
+	printf("\t");
+	for(int i = 0; i < 62; i++)
+		printf("%c", 205);
+	printf("\n");
+}
+void ScreenResource_TopBar(){
+	printf("\t%c", 200);
+	for(int i = 1; i < 61; i++)
+		printf("%c", 205);
+	printf("%c", 188);
+	printf("\n");
+}
 #endif /* APPLICATION_H */
