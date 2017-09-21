@@ -1,1 +1,1 @@
-cls && gcc -Wall main.c -o debug && debug
+cls && gcc -Wall main.c -o debug && start debug

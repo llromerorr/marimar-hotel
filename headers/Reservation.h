@@ -175,7 +175,7 @@ void Reservation_File_Clear(){
     fclose(file);
 }
 
-void Reservation_Delete_Reservation(int Selection){
+void Reservation_Delete_ByNumber(int Selection){
     Reservation *Pointer = NULL;
 
     if(Selection < 1 || Selection > ReservationQuantity){
@@ -209,6 +209,36 @@ void Reservation_Delete_Reservation(int Selection){
         Pointer->Next->Previous = Pointer->Previous;
         Pointer->Previous->Next = Pointer->Next;
         free(Pointer);
+        ReservationQuantity--;
+    }
+}
+
+void Reservation_Delete_ByPointer(Reservation * Selection){
+    if(Selection == NULL){
+        return;
+    }
+    else if(Selection == Reservation_FirstReservation){
+        if(ReservationQuantity == 1){
+            Reservation_FirstReservation = NULL;
+            Reservation_LastReservation = NULL;
+        }
+        else{
+            Selection->Next->Previous = NULL;
+            Reservation_FirstReservation = Reservation_FirstReservation->Next;
+        }
+        free(Selection);
+        ReservationQuantity--;
+    }
+    else if(Selection == Reservation_LastReservation){
+        Selection->Previous->Next = NULL;
+        Reservation_LastReservation = Reservation_LastReservation->Previous;
+        free(Selection);
+        ReservationQuantity--;
+    }
+    else{
+        Selection->Next->Previous = Selection->Previous;
+        Selection->Previous->Next = Selection->Next;
+        free(Selection);
         ReservationQuantity--;
     }
 }
