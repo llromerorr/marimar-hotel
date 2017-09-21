@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "Console.h"
+#include "Guest.h"
 #include "Reservation.h"
 
 //----------------------PROTOTYPES-----------------------
@@ -13,8 +14,8 @@ int Application_Menu_Reservation();
 void Application_Menu_Reservation_ShowAll();
 int Application_Menu_Reservation_New(int CI);
 int Application_Menu_Reservation_Edit(Reservation * Pointer);
-void ScreenResource_DivitionBar();
-void ScreenResource_TopBar();
+void ScreenResource_DivitionBar(int Width, int Index, int JumpLine);
+void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine);
 
 //----------------------FUNCTIONS------------------------
 
@@ -27,12 +28,12 @@ void Application_Exit(){
 	while(1){
 		Console_Clear();
 		char letter;
-		printf("\n\t==========================================");
-		printf("\n\t   SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
-		printf("\n\t             | ADVERTENCIA |");
-		printf("\n\t==========================================\n");
+		puts("");
+		ScreenResource_DivitionBar_Double(41,1,1);
+		printf("\t             | ADVERTENCIA |\n");
+		ScreenResource_DivitionBar_Double(41,1,1);
 		printf("\n\tEsta  a  punto de  salir del sistema, los");
-		printf("\n\tcambios  no  guadados  se  perderan.\n\n");
+		printf("\n\tcambios  no  guadados  se  perderan.\n");
 		printf("\n\tEsta seguro que desea salir? [S/N]: ");
 		letter = getc(stdin);
 		while(getchar()!='\n');
@@ -59,7 +60,7 @@ void Application_Message_Error(){
 
 void Application_Menu_Welcome(){
 	printf("\n");
-	ScreenResource_DivitionBar();
+	ScreenResource_DivitionBar_Double(62,1,1);
 	printf("\n");
 	printf("\t	   %c%c   %c%c      %c    %c%c%c%c%c%c%c  %c%c%c%c%c  %c%c\n",
 	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
@@ -113,7 +114,7 @@ void Application_Menu_Welcome(){
 	printf("\t%c%c      %c%c  %c%c   %c%c  %c%c   %c%c %c%c  %c%c      %c%c  %c%c   %c%c  %c%c   %c%c\n\n",
 	219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
 
-	ScreenResource_DivitionBar();
+	ScreenResource_DivitionBar_Double(62,1,1);
 	printf("\t   Si tiene algun problema en poder visualizar esta pantalla \n");
 	printf("\t    redimensione la consola, presione ENTER para continuar\n");
 	Console_Pause();
@@ -126,18 +127,20 @@ int Application_Menu_Main(){
 	Reservation_File_Load();
 	Console_Clear();
 	puts("");
-	ScreenResource_DivitionBar();
-	printf("\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+	ScreenResource_DivitionBar_Double(62,1,0);
+	printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
 	printf("\t\t\t        FACYT COMPUTACION\n");
-	printf("\t\t\t           BIENVENIDO\n");
-	ScreenResource_DivitionBar();
-	//printf("\n\t\t\t         MENU PRINCIPAL\n\n");
-	puts("\n\t[1] Reservaciones");
-	puts("\t[2] Huespedes");
-	puts("\t[3] Servicios Especiales");
-	puts("\t[4] Salida de Huespedes");
-	puts("\t[5] Reportes Mensuales");
-	printf("\t[6] Salir\n\n");
+	//printf("\t\t\t            21/09/17\n");
+	ScreenResource_DivitionBar_Double(62,1,2);
+	printf("\t\t\t       MENU PRINCIPAL\n");
+
+	printf("\n\tOPCIONES\t\t\t\tTOTALES\n");
+	//ScreenResource_DivitionBar(22,6,0);
+	printf("\n\t[1] RESERVACIONES\t\t\t%-6d RESERVADAS\n", ReservationQuantity); 
+	printf("\t[2] HUESPEDES\t\t\t\t%-6d OCUPADAS\n", GuestQuantity);
+	printf("\t[3] REPORTES MENSUALES\t\t\t%-6d Bsf GANANCIAS\n", 234);
+	printf("\t[9] SALIR\n\n");
+	//ScreenResource_DivitionBar(62,1,2);
 	printf("\tOpcion: ");
 	
 	Console_Input_Int(&Selection);
@@ -158,7 +161,7 @@ int Application_Menu_Main(){
 		case 5:
 			return 1;
 			break;
-		case 6:
+		case 9:
 			Application_Exit();
 			return 1;
 			break;
@@ -372,17 +375,25 @@ void Application_Menu_Reservation_ShowAll(){
 
 //==============================================================================
 
-void ScreenResource_DivitionBar(){
-	printf("\t");
-	for(int i = 0; i < 62; i++)
-		printf("%c", 205);
-	printf("\n");
+void ScreenResource_DivitionBar(int Width, int Index, int JumpLine){
+	for(int i = 0; i < Index; i++)
+		printf("\t");
+
+	for(int i = 0; i < Width; i++)
+		printf("%c", 196);
+
+	for(int i = 0; i < JumpLine; i++)
+		printf("\n");
 }
-void ScreenResource_TopBar(){
-	printf("\t%c", 200);
-	for(int i = 1; i < 61; i++)
+
+void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine){
+	for(int i = 0; i < Index; i++)
+		printf("\t");
+
+	for(int i = 0; i < Width; i++)
 		printf("%c", 205);
-	printf("%c", 188);
-	printf("\n");
+
+	for(int i = 0; i < JumpLine; i++)
+		printf("\n");
 }
 #endif /* APPLICATION_H */
