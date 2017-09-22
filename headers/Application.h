@@ -222,8 +222,8 @@ int Application_Menu_Reservation_New(int CI){
 		puts("");
 		ScreenResource_DivitionBar_Double(62,1,0);
 		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
-		printf("\t\t\t            RESERVACIONES");
-		printf("\n\t\t\t     -> NUEVA RESERVACION <-\n");
+		printf("\t\t\t            RESERVACIONES\n");
+		printf("\t\t\t       -> NUEVA RESERVACION <-\n");
 		ScreenResource_DivitionBar_Double(62,1,2);
 
 		printf("\t[0] Cancelar\n\n");
@@ -430,25 +430,19 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 void Application_Menu_Reservation_ShowAll(){
 	Console_Clear();
 	int Selection = 0;
-	printf("\n\t\t\t\t    ==========================================");
+	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
 	printf("\n\t\t\t\t       SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
-	printf("\n\t\t\t\t                >|RESERVACIONES|<");
-	printf("\n\t\t\t\t    ==========================================\n");
+	printf("\n\t\t\t\t                  RESERVACIONES");
+	printf("\n\t\t\t\t                -> REGISTRADAS <-\n");
+	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
 	printf("\n\t\t\t\t            RESERVACIONES REGISTRADAS\n\n\n");
-	printf("\t%-5s %-15s %-15s %-10s %-15s %-15s %-8s %-10s\n\t", 
+	printf("\t%-5s %-15s %-15s %-10s %-15s %-15s %-8s %-10s\n", 
 			"N", "NOMBRE", "APELLIDO", "CI",
 			"INICIO", "SALIDA", "N.HAB", "T.PAGO");
 
-	for(int i = 0; i < 98; i++)	//
-		printf("-");			// Barra separadora
-	puts("");					//
-	
+	ScreenResource_DivitionBar(98,1,1);
 	Reservation_Show_All();		//MOSTRAR RESERVACIONES
-	
-	putchar('\t');
-	for(int i = 0; i < 98; i++)	//
-		printf("-");			// Barra separadora
-	puts("");					//
+	ScreenResource_DivitionBar(98,1,1);
 	
 	printf("\n\t[ENTER]  VOLVER\n");
 	printf("\t[NUMERO] MODIFICAR RESERVACION\n\n");
