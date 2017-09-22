@@ -181,9 +181,6 @@ int Application_Menu_Reservation(){
 		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
 		printf("\t\t\t        -> RESERVACIONES <-\n");
 		ScreenResource_DivitionBar_Double(62,1,2);
-		printf("\n\t             CREAR O BUSCAR\n");
-		printf("\n\tIntroduce una Cedula  de  Identidad, para\n");
-		printf("\tcomenzar a buscar, y si no existe crearla.\n\n");
 		puts("\t[1] Mostrar Reservaciones");
 		puts("\t[9] Volver\n");
 		printf("\tCI: ");
@@ -213,36 +210,124 @@ int Application_Menu_Reservation(){
 }
 
 int Application_Menu_Reservation_New(int CI){	
-	char Name[30];
-    char LastName[30];
-    Time Input;
-    Time Output;
-    int Number;
-	char PayType[30];
+	char Name[30] = "";
+    char LastName[30] = "";
+    Time Input = Time_Null();
+    Time Output = Time_Null();
+    int Number = -1;
+	char PayType[30] = "";
 
-	Console_Clear();
-	printf("\n\t==========================================");
-	printf("\n\t   SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
-	printf("\n\t            >|RESERVACIONES|<");
-	printf("\n\t==========================================\n");
-	printf("\n\t           NUEVA RESERVACION\n\n");
-	printf("\tRegistrando nueva reservacion a CI:%d\n", CI);
-	printf("\tpara cancelarlo escriba \"0\"\n\n");
-	printf("\tNombre y Apellido: ");
-	scanf("%s", Name);
-	if(strcmp(Name, "0") == 0)
-		return 0;
-	scanf("%s",LastName);
-	printf("\tFecha Inicio (dia/mes/ano): ");
-	scanf("%d/%d/%d", &Input.Day, &Input.Month, &Input.Year);
-	printf("\tFecha Salida (dia/mes/ano): ");
-	scanf("%d/%d/%d", &Output.Day, &Output.Month, &Output.Year);
-	printf("\tNumero Habitacion: ");
-	scanf("%d", &Number);
-	printf("\tTipo de pago: ");
-	scanf("%s", PayType);
+	while(1){
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t            RESERVACIONES");
+		printf("\n\t\t\t     -> NUEVA RESERVACION <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+
+		printf("\t[0] Cancelar\n\n");
+		printf("\tCEDULA:\t\t%d\n", CI);
+		printf("\tNOMBRE:\t\t");
+		if(strcmp(Name, "") == 0){
+			scanf("%s", Name);
+			if(strcmp(Name, "0") == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+		}
+		else{
+			puts(Name);
+		}
+	
+		printf("\tAPELLIDO:\t");
+		if(strcmp(LastName, "") == 0){
+			scanf("%s",LastName);
+			if(strcmp(LastName, "0") == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+		}	
+		else{
+			puts(LastName);
+		}
+
+		printf("\tFecha Inicio (dia/mes/ano): ");
+		if(Time_Compare(Input, Time_Null()) == 0){
+			scanf("%d/", &Input.Day);
+			if(Input.Day == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			scanf("%d/%d", &Input.Month, &Input.Year);
+			if(!Time_Check(Input)){
+				while(getchar() != '\n');
+				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
+				Input = Time_Null();
+				Console_Pause();
+				continue;
+			}
+		}
+		else{
+			puts(Time_ToString(Input));
+		}
+		printf("\tFecha Salida (dia/mes/ano): ");
+		if(Time_Compare(Output, Time_Null()) == 0){
+			scanf("%d/", &Output.Day);
+			if(Output.Day == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			scanf("%d/%d", &Output.Month, &Output.Year);
+			if(!Time_Check(Output)){
+				while(getchar() != '\n');
+				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
+				Output = Time_Null();
+				Console_Pause();
+				continue;
+			}
+		}
+		else{
+			puts(Time_ToString(Output));
+		}
+
+		printf("\tNumero Habitacion: ");
+		if(Number == -1){
+			scanf("%d", &Number);
+			if(Number == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+		}
+		else
+			printf("%d\n", Number);
+
+		printf("\tTipo de pago: ");
+		if(strcmp(PayType, "") == 0){
+			scanf("%s", PayType);
+			if(strcmp(PayType, "0") == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+		}
+		break; // Continuar a la creacion
+	}
+
 	Reservation_New(Name, LastName, CI, Input, Output, Number, PayType);
 	Reservation_File_Save();
+	puts("\tRESERVACION CREADA EXITOSAMENTE...");
 	Console_Pause();
 	return 0;
 }

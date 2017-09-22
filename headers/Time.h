@@ -25,6 +25,10 @@ char* Time_ToString(Time time){
     return TimeString;
 }
 
+int Time_ToDays(Time time){
+    return (time.Year * 365) + ((time.Month) * 30) + time.Day;
+}
+
 int Time_Check(Time time){
     if(time.Month < 1 || time.Month > 12)   return 0;
 	if(time.Day < 1 || time.Day > 31) 	    return 0;
