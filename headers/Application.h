@@ -132,11 +132,11 @@ int Application_Menu_Main(){
 	printf("\t\t\t        FACYT COMPUTACION\n");
 	ScreenResource_DivitionBar_Double(62,1,2);
 
-	printf("\tOPCIONES\t\t\t\tTOTALES\n");
+	printf("\t\t\t         MENU PRINCIPAL\n");
 	//ScreenResource_DivitionBar(22,6,0);
-	printf("\n\t[1] RESERVACIONES\t\t\t%-6d RESERVADAS\n", ReservationQuantity); 
-	printf("\t[2] HUESPEDES\t\t\t\t%-6d OCUPADAS\n", GuestQuantity);
-	printf("\t[3] REPORTES MENSUALES\t\t\t%-6d Bsf GANANCIAS\n", 234);
+	printf("\n\t[1] RESERVACIONES\t\t->\t[%-6d %-13s]\n", ReservationQuantity,"RESERVADAS"); 
+	printf("\t[2] HUESPEDES\t\t\t->\t[%-6d %-13s]\n", GuestQuantity, "OCUPADAS");
+	printf("\t[3] REPORTES MENSUALES\t\t->\t[%-6d %-13s]\n", 0, "BSF GANANCIAS");
 	printf("\t[9] SALIR\n\n");
 	//ScreenResource_DivitionBar(62,1,2);
 	printf("\tOpcion: ");
@@ -188,7 +188,6 @@ int Application_Menu_Reservation(){
 		Console_Input_Int(&Selection);
 		switch(Selection){
 			case 0:
-				puts("\n\tNumero de CI no valido...");
 				break;
 			case 1:
 				Application_Menu_Reservation_ShowAll();
@@ -231,12 +230,13 @@ int Application_Menu_Reservation_New(int CI){
 		printf("\tNOMBRE:\t\t");
 		if(strcmp(Name, "") == 0){
 			scanf("%s", Name);
+			while(getchar() != '\n');
 			if(strcmp(Name, "0") == 0){
-				while(getchar() != '\n');
 				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
 				Console_Pause();
 				return 0;
 			}
+			continue;
 		}
 		else{
 			puts(Name);
@@ -245,12 +245,13 @@ int Application_Menu_Reservation_New(int CI){
 		printf("\tAPELLIDO:\t");
 		if(strcmp(LastName, "") == 0){
 			scanf("%s",LastName);
+			while(getchar() != '\n');
 			if(strcmp(LastName, "0") == 0){
-				while(getchar() != '\n');
 				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
 				Console_Pause();
 				return 0;
 			}
+			continue;
 		}	
 		else{
 			puts(LastName);
@@ -259,24 +260,26 @@ int Application_Menu_Reservation_New(int CI){
 		printf("\tFecha Inicio (dia/mes/ano): ");
 		if(Time_Compare(Input, Time_Null()) == 0){
 			scanf("%d/", &Input.Day);
-			if(Input.Day == 0){
+			if(Input.Day == 0){	
 				while(getchar() != '\n');
 				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
 				Console_Pause();
 				return 0;
 			}
 			scanf("%d/%d", &Input.Month, &Input.Year);
+			while(getchar() != '\n');
 			if(!Time_Check(Input)){
-				while(getchar() != '\n');
 				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
 				Input = Time_Null();
 				Console_Pause();
 				continue;
 			}
+			continue;
 		}
 		else{
 			puts(Time_ToString(Input));
 		}
+
 		printf("\tFecha Salida (dia/mes/ano): ");
 		if(Time_Compare(Output, Time_Null()) == 0){
 			scanf("%d/", &Output.Day);
@@ -287,13 +290,14 @@ int Application_Menu_Reservation_New(int CI){
 				return 0;
 			}
 			scanf("%d/%d", &Output.Month, &Output.Year);
+			while(getchar() != '\n');
 			if(!Time_Check(Output)){
-				while(getchar() != '\n');
 				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
-				Output = Time_Null();
+				Input = Time_Null();
 				Console_Pause();
 				continue;
 			}
+			continue;
 		}
 		else{
 			puts(Time_ToString(Output));
@@ -302,12 +306,13 @@ int Application_Menu_Reservation_New(int CI){
 		printf("\tNumero Habitacion: ");
 		if(Number == -1){
 			scanf("%d", &Number);
+			while(getchar() != '\n');
 			if(Number == 0){
-				while(getchar() != '\n');
 				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
 				Console_Pause();
 				return 0;
 			}
+			continue;
 		}
 		else
 			printf("%d\n", Number);
@@ -315,19 +320,22 @@ int Application_Menu_Reservation_New(int CI){
 		printf("\tTipo de pago: ");
 		if(strcmp(PayType, "") == 0){
 			scanf("%s", PayType);
+			while(getchar() != '\n');
 			if(strcmp(PayType, "0") == 0){
-				while(getchar() != '\n');
 				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
 				Console_Pause();
 				return 0;
 			}
+			continue;
 		}
+		else
+			puts(PayType);
 		break; // Continuar a la creacion
 	}
 
 	Reservation_New(Name, LastName, CI, Input, Output, Number, PayType);
 	Reservation_File_Save();
-	puts("\tRESERVACION CREADA EXITOSAMENTE...");
+	puts("\n\tRESERVACION CREADA EXITOSAMENTE, presione ENTER para continuar...");
 	Console_Pause();
 	return 0;
 }
@@ -346,31 +354,33 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 	while(1){
 		int Selection = 0;
 		Console_Clear();
-		printf("\n\t==========================================");
-		printf("\n\t   SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
-		printf("\n\t            >|RESERVACIONES|<");
-		printf("\n\t==========================================\n");
-		printf("\n\t           MODIFICAR RESERVACION\n\n");
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t            RESERVACIONES\n");
+		printf("\t\t\t     -> MODIFICAR RESERVACION <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
 	
-		printf("\tNombre Completo:\t%s %s\n",Pointer->Name,Pointer->LastName);
-		printf("\tCI:\t\t\t%d\n", Pointer->CI);
-		printf("\tFecha Inicio:\t\t%s\n", Time_ToString(Pointer->Input));
-		printf("\tFecha Salida:\t\t%s\n",Time_ToString(Pointer->Output));
-		printf("\tHabitacion:\t\t%d\n", Pointer->Number);
-		printf("\tTipo de pago:\t\t%s\n", Pointer->PayType);
-		printf("\n\t------------------------------------------\n\n");
+		printf("\t Nombre Completo:\t%s %s\n",Pointer->Name,Pointer->LastName);
+		printf("\t CI:\t\t\t%d\n", Pointer->CI);
+		printf("\t Fecha Inicio:\t\t%s\n", Time_ToString(Pointer->Input));
+		printf("\t Fecha Salida:\t\t%s\n",Time_ToString(Pointer->Output));
+		printf("\t Habitacion:\t\t%d\n", Pointer->Number);
+		printf("\t Tipo de pago:\t\t%s\n\n", Pointer->PayType);
 
-		puts("\t[ 1 ] Cambiar Nombre");
-		puts("\t[ 2 ] Cambiar Apellido");
-		puts("\t[ 3 ] Cambiar CI");
-		puts("\t[ 4 ] Cambiar Fecha Inicio");
-		puts("\t[ 5 ] Cambiar Fecha Salida");
-		puts("\t[ 6 ] Cambiar N. Habitacion");
-		puts("\t[ 7 ] Cambiar Tipo de Pago\n");
-		puts("\t[-1 ] ELIMINAR RESERVACION");
-		puts("\t[ 8 ] GUARDAR CAMBIOS");
-		printf("\t[ 9 ] SALIR\n\n");
-		printf("\tOpcion: ");
+		ScreenResource_DivitionBar(62,1,2);
+
+		puts("\t [1]  Cambiar Nombre");
+		puts("\t [2]  Cambiar Apellido");
+		puts("\t [3]  Cambiar CI");
+		puts("\t [4]  Cambiar Fecha Inicio");
+		puts("\t [5]  Cambiar Fecha Salida");
+		puts("\t [6]  Cambiar N. Habitacion");
+		puts("\t [7]  Cambiar Tipo de Pago\n");
+		puts("\t -1] ELIMINAR RESERVACION");
+		puts("\t [8] GUARDAR CAMBIOS");
+		printf("\t [9] SALIR\n\n");
+		printf("\t Opcion: ");
 
 		Console_Input_Int(&Selection);
 		switch(Selection){
@@ -382,43 +392,43 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 				return 0;
 				break;
 			case 1:
-				printf("\tNombre: ");
+				printf("\t Nombre: ");
 				scanf("%s", Name);
 				Reservation_Set_Name(Pointer, Name);
 				break;
 			case 2:
-				printf("\tApellido: ");
+				printf("\t Apellido: ");
 				scanf("%s", LastName);
 				Reservation_Set_LastName(Pointer, LastName);
 				break;
 			case 3:
-				printf("\tCI: ");
+				printf("\t CI: ");
 				Console_Input_Int(&CI);
 				Reservation_Set_CI(Pointer, CI);
 				break;
 			case 4:
-				printf("\tFecha Inicio (dia/mes/ano): ");
+				printf("\t Fecha Inicio (dia/mes/ano): ");
 				scanf("%d/%d/%d", &Input.Day, &Input.Month, &Input.Year);
 				Reservation_Set_TimeInput(Pointer, Input);
 				break;
 			case 5:
-				printf("\tFecha Salida (dia/mes/ano): ");
+				printf("\t Fecha Salida (dia/mes/ano): ");
 				scanf("%d/%d/%d", &Output.Day, &Output.Month, &Output.Year);
 				Reservation_Set_TimeOutput(Pointer, Output);
 				break;
 			case 6:
-				printf("\tNumero Habitacion: ");
+				printf("\t Numero Habitacion: ");
 				Console_Input_Int(&Number);
 				Reservation_Set_Number(Pointer, Number);
 				break;
 			case 7:
-				printf("\tTipo de Pago: ");
+				printf("\t Tipo de Pago: ");
 				scanf("%s", PayType);
 				Reservation_Set_PayType(Pointer, PayType);
 				break;
 			case 8:
 				Reservation_File_Save();
-				printf("\n\tCAMBIOS GUARDADOS EXITOSAMENTE!\n");
+				printf("\n\tCAMBIOS GUARDADOS EXITOSAMENTE!, presiones ENTER para continuar...\n");
 				Console_Pause();
 			case 9:
 				return 0;
