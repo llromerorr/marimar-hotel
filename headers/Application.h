@@ -14,6 +14,12 @@ int Application_Menu_Reservation();
 void Application_Menu_Reservation_ShowAll();
 int Application_Menu_Reservation_New(int CI);
 int Application_Menu_Reservation_Edit(Reservation * Pointer);
+
+int Application_Menu_Guest();
+int Application_Menu_Guest_New(int CI);
+int Application_Menu_Guest_Edit(Guest * Pointer);
+void Application_Menu_Guest_ShowAll();
+
 void ScreenResource_DivitionBar(int Width, int Index, int JumpLine);
 void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine);
 
@@ -148,6 +154,7 @@ int Application_Menu_Main(){
 			return 1;
 			break;
 		case 2:
+			Application_Menu_Guest();
 			return 1;
 			break;
 		case 3:
@@ -461,6 +468,299 @@ void Application_Menu_Reservation_ShowAll(){
 	Application_Menu_Reservation_Edit(Reservation_Get_Reservation(Selection));
 }
 
+//-----------------Guest MENUS-----------------
+
+int Application_Menu_Guest(){
+	while(1){
+		Guest_File_Load();
+		int Selection = 0;
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t        -> HUESPEDES <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+		puts("\t[1] MOSTRAR HUESPEDES");
+		puts("\t[9] VOLVER\n");
+		printf("\tCI: ");
+		
+		Console_Input_Int(&Selection);
+		switch(Selection){
+			case 0:
+				break;
+			case 1:
+				Application_Menu_Guest_ShowAll();
+				break;
+			case 9:
+				return 0;
+				break;
+			default:
+				if(Guest_Search_CI(Selection)){
+					Console_Clear();
+					Application_Menu_Guest_Edit(
+						Guest_Search_CI(Selection));
+				}
+				else
+					Application_Menu_Guest_New(Selection);
+		}
+	}
+	return 0;
+}
+
+int Application_Menu_Guest_New(int CI){	
+	char Name[30] = "";
+    char LastName[30] = "";
+    Time Input = Time_Null();
+    Time Output = Time_Null();
+    int Number = -1;
+	char PayType[30] = "";
+
+	while(1){
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t              HUESPEDES\n");	
+		printf("\t\t\t         -> NUEVO HUESPED <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+
+		printf("\t[0] Cancelar\n\n");
+		printf("\tCEDULA:\t\t%d\n", CI);
+		printf("\tNOMBRE:\t\t");
+		if(strcmp(Name, "") == 0){
+			scanf("%s", Name);
+			while(getchar() != '\n');
+			if(strcmp(Name, "0") == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}
+		else{
+			puts(Name);
+		}
+	
+		printf("\tAPELLIDO:\t");
+		if(strcmp(LastName, "") == 0){
+			scanf("%s",LastName);
+			while(getchar() != '\n');
+			if(strcmp(LastName, "0") == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}	
+		else{
+			puts(LastName);
+		}
+
+		printf("\tFecha Inicio (dia/mes/ano): ");
+		if(Time_Compare(Input, Time_Null()) == 0){
+			scanf("%d/", &Input.Day);
+			if(Input.Day == 0){	
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			scanf("%d/%d", &Input.Month, &Input.Year);
+			while(getchar() != '\n');
+			if(!Time_Check(Input)){
+				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
+				Input = Time_Null();
+				Console_Pause();
+				continue;
+			}
+			continue;
+		}
+		else{
+			puts(Time_ToString(Input));
+		}
+
+		printf("\tFecha Salida (dia/mes/ano): ");
+		if(Time_Compare(Output, Time_Null()) == 0){
+			scanf("%d/", &Output.Day);
+			if(Output.Day == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			scanf("%d/%d", &Output.Month, &Output.Year);
+			while(getchar() != '\n');
+			if(!Time_Check(Output)){
+				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
+				Input = Time_Null();
+				Console_Pause();
+				continue;
+			}
+			continue;
+		}
+		else{
+			puts(Time_ToString(Output));
+		}
+
+		printf("\tNumero Habitacion: ");
+		if(Number == -1){
+			scanf("%d", &Number);
+			while(getchar() != '\n');
+			if(Number == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}
+		else
+			printf("%d\n", Number);
+
+		printf("\tTipo de pago: ");
+		if(strcmp(PayType, "") == 0){
+			scanf("%s", PayType);
+			while(getchar() != '\n');
+			if(strcmp(PayType, "0") == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}
+		else
+			puts(PayType);
+		break; // Continuar a la creacion
+	}
+
+	Guest_New(Name, LastName, CI, Input, Output, Number, PayType);
+	Guest_File_Save();
+	puts("\n\tHospedaje CREADO EXITOSAMENTE, presione ENTER para continuar...");
+	Console_Pause();
+	return 0;
+}
+
+int Application_Menu_Guest_Edit(Guest * Pointer){
+	if(!Pointer)
+		return 0;
+	char Name[30];
+	char LastName[30];
+	int CI;
+	Time Input;
+	Time Output;
+	int Number;
+	char PayType[30];
+
+	while(1){
+		int Selection = 0;
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t            HUESPEDES\n");
+		printf("\t\t\t     -> MODIFICAR HUESPED <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+	
+		printf("\t Nombre Completo:\t%s %s\n",Pointer->Name,Pointer->LastName);
+		printf("\t CI:\t\t\t%d\n", Pointer->CI);
+		printf("\t Fecha Inicio:\t\t%s\n", Time_ToString(Pointer->Input));
+		printf("\t Fecha Salida:\t\t%s\n",Time_ToString(Pointer->Output));
+		printf("\t Habitacion:\t\t%d\n", Pointer->Number);
+		printf("\t Tipo de pago:\t\t%s\n\n", Pointer->PayType);
+
+		ScreenResource_DivitionBar(62,1,2);
+
+		puts("\t [1]  Cambiar Nombre");
+		puts("\t [2]  Cambiar Apellido");
+		puts("\t [3]  Cambiar CI");
+		puts("\t [4]  Cambiar Fecha Inicio");
+		puts("\t [5]  Cambiar Fecha Salida");
+		puts("\t [6]  Cambiar N. Habitacion");
+		puts("\t [7]  Cambiar Tipo de Pago\n");
+		puts("\t -1] ELIMINAR HUESPED");
+		puts("\t [8] GUARDAR CAMBIOS");
+		printf("\t [9] SALIR\n\n");
+		printf("\t Opcion: ");
+
+		Console_Input_Int(&Selection);
+		switch(Selection){
+			case -1:
+				Guest_Delete_ByPointer(Pointer);
+				printf("\tHUESPED ELIMINADO, presione ENTER para continuar.\n");
+				Guest_File_Save();
+				Console_Pause();
+				return 0;
+				break;
+			case 1:
+				printf("\t Nombre: ");
+				scanf("%s", Name);
+				Guest_Set_Name(Pointer, Name);
+				break;
+			case 2:
+				printf("\t Apellido: ");
+				scanf("%s", LastName);
+				Guest_Set_LastName(Pointer, LastName);
+				break;
+			case 3:
+				printf("\t CI: ");
+				Console_Input_Int(&CI);
+				Guest_Set_CI(Pointer, CI);
+				break;
+			case 4:
+				printf("\t Fecha Inicio (dia/mes/ano): ");
+				scanf("%d/%d/%d", &Input.Day, &Input.Month, &Input.Year);
+				Guest_Set_TimeInput(Pointer, Input);
+				break;
+			case 5:
+				printf("\t Fecha Salida (dia/mes/ano): ");
+				scanf("%d/%d/%d", &Output.Day, &Output.Month, &Output.Year);
+				Guest_Set_TimeOutput(Pointer, Output);
+				break;
+			case 6:
+				printf("\t Numero Habitacion: ");
+				Console_Input_Int(&Number);
+				Guest_Set_Number(Pointer, Number);
+				break;
+			case 7:
+				printf("\t Tipo de Pago: ");
+				scanf("%s", PayType);
+				Guest_Set_PayType(Pointer, PayType);
+				break;
+			case 8:
+				Guest_File_Save();
+				printf("\n\tCAMBIOS GUARDADOS EXITOSAMENTE!, presiones ENTER para continuar...\n");
+				Console_Pause();
+			case 9:
+				return 0;
+		}
+	}
+	return 0;
+}
+
+void Application_Menu_Guest_ShowAll(){
+	Console_Clear();
+	int Selection = 0;
+	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
+	printf("\n\t\t\t\t       SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
+	printf("\n\t\t\t\t                    HUESPEDES");
+	printf("\n\t\t\t\t                -> REGISTRADOS <-\n");
+	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
+	printf("\n\t\t\t\t              HUESPEDES REGISTRADOS\n\n\n");
+	printf("\t%-5s %-15s %-15s %-10s %-15s %-15s %-8s %-10s\n", 
+			"N", "NOMBRE", "APELLIDO", "CI",
+			"INICIO", "SALIDA", "N.HAB", "T.PAGO");
+
+	ScreenResource_DivitionBar(98,1,1);
+	Guest_Show_All();		//MOSTRAR HuespedES
+	ScreenResource_DivitionBar(98,1,1);
+	
+	printf("\n\t[ENTER]  VOLVER\n");
+	printf("\t[NUMERO] MODIFICAR HUESPED\n\n");
+	printf("\tOpcion: ");
+	Console_Input_Int(&Selection);
+	Application_Menu_Guest_Edit(Guest_Get_Guest(Selection));
+}
+
+
 //==============================================================================
 
 void ScreenResource_DivitionBar(int Width, int Index, int JumpLine){
@@ -484,4 +784,5 @@ void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine){
 	for(int i = 0; i < JumpLine; i++)
 		printf("\n");
 }
+
 #endif /* APPLICATION_H */
