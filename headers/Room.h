@@ -302,7 +302,37 @@ Room* Room_Search_ByNumber(int Number){
     return NULL;
 }
 
-int * Room_Search_Free_ByAllPointer(){
+int * Room_Get_RoomBusy(){
+    Reservation_File_Load();
+    Guest_File_Load();
+    Room_File_Load();
+
+    if((ReservationQuantity + GuestQuantity) == 0)
+        return NULL;
+
+    int *RoomUsed = (int*) malloc(sizeof(int) * (ReservationQuantity + GuestQuantity) + 1);
+
+    if(ReservationQuantity){
+        Reservation * Reservation_Pointer = Reservation_FirstReservation;
+        for(int i = 0; i < ReservationQuantity; i++){
+            RoomUsed[i] = Reservation_Pointer->Number;
+            Reservation_Pointer = Reservation_Pointer->Next;
+        }
+    }
+
+    if(GuestQuantity){
+        Guest * Guest_Pointer = Guest_FirstGuest;
+        for(int i = ReservationQuantity; i < (GuestQuantity + ReservationQuantity); i++){
+            RoomUsed[i] = Guest_Pointer->Number;
+            Guest_Pointer = Guest_Pointer->Next;
+        }
+    }
+
+    RoomUsed[ReservationQuantity + GuestQuantity] = 0;
+    return RoomUsed;
+}
+
+int * Room_Get_RoomFree(){
     Reservation_File_Load();
     Guest_File_Load();
     Room_File_Load();
@@ -350,9 +380,12 @@ int * Room_Search_Free_ByAllPointer(){
 
         Room_Pointer = Room_Pointer->Next;
     }
-
+    if(RoomFreeQuantity == 0)
+        return NULL;
     RoomFree[RoomFreeQuantity] = 0;
+
     return RoomFree;
 }
+
 
 #endif /* Room_H */

@@ -4,8 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "Console.h"
 #include "Guest.h"
+#include "Room.h"
 #include "Reservation.h"
 
 //----------------------PROTOTYPES-----------------------
@@ -59,6 +61,17 @@ void Application_Message_EmptyProcess(){
 
 void Application_Message_Error(){
 	printf("\n\t**ERROR 400:34_2f**");
+	Application_Pause();
+}
+
+void Application_Menu_Error_NoFreeRooms(){
+	Console_Clear();
+	puts("");
+	ScreenResource_DivitionBar_Double(41,1,1);
+	printf("\t             | ADVERTENCIA |\n");
+	ScreenResource_DivitionBar_Double(41,1,1);
+	printf("\n\tNo se puden realizar reservaciones, no");
+	printf("\n\thay habitaciones disponibles.\n");
 	Application_Pause();
 }
 
@@ -131,6 +144,8 @@ void Application_Menu_Welcome(){
 int Application_Menu_Main(){
 	int Selection = 0;
 	Reservation_File_Load();
+	Guest_File_Load();
+	Room_File_Load();
 	Console_Clear();
 	puts("");
 	ScreenResource_DivitionBar_Double(62,1,0);
@@ -215,7 +230,12 @@ int Application_Menu_Reservation(){
 	return 0;
 }
 
-int Application_Menu_Reservation_New(int CI){	
+int Application_Menu_Reservation_New(int CI){
+	if(!Room_Get_RoomFree()){
+		Application_Menu_Error_NoFreeRooms();
+		return 0;
+	}
+
 	char Name[30] = "";
     char LastName[30] = "";
     Time Input = Time_Null();
@@ -300,7 +320,7 @@ int Application_Menu_Reservation_New(int CI){
 			while(getchar() != '\n');
 			if(!Time_Check(Output)){
 				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
-				Input = Time_Null();
+				Output = Time_Null();
 				Console_Pause();
 				continue;
 			}
@@ -319,7 +339,23 @@ int Application_Menu_Reservation_New(int CI){
 				Console_Pause();
 				return 0;
 			}
-			continue;
+
+			int *RoomFree = Room_Get_RoomFree();
+			bool NumberIsOk = false;
+			for(int i = 0; RoomFree[i]; i++)
+				if(Number == RoomFree[i])
+					NumberIsOk = true;
+			if(!NumberIsOk){
+				printf("\n\t*Habitacion %d no disponible*\n", Number);
+				printf("\n\tDisponibles: [ ");
+				for(int i = 0; RoomFree[i]; i++)
+					printf("%d ", RoomFree[i]);
+				printf("]\n");
+				printf("\n\tPresione ENTER para continuar...\n");
+				Number = -1;
+				Console_Pause();
+				continue;
+			}
 		}
 		else
 			printf("%d\n", Number);
