@@ -231,7 +231,7 @@ void Charge_Delete_ByAllPointers(Charge ** Selection){
 
 //-------------------Setters and Getters---------------------
 
-Charge* Charge_Get_Charge(int Selection){
+Charge* Charge_Get_ByNumber(int Selection){
     Charge *Pointer = Charge_FirstCharge;
     if(Selection < 1 || Selection > ChargeQuantity)
         return NULL;
@@ -242,7 +242,7 @@ Charge* Charge_Get_Charge(int Selection){
     }
 }
 
-int Charge_Get_CI(int Selection){
+int Charge_Get_CI_ByNumber(int Selection){
     Charge *Pointer = Charge_FirstCharge;
     if(Selection < 1 || Selection > ChargeQuantity)
         return 0;
@@ -253,7 +253,7 @@ int Charge_Get_CI(int Selection){
     }
 }
 
-Time Charge_Get_TimeCharge(int Selection){
+Time Charge_Get_TimeCharge_ByNumber(int Selection){
     Charge *Pointer = Charge_FirstCharge;
     if(Selection < 1 || Selection > ChargeQuantity)
         return Time_Null();
@@ -264,7 +264,7 @@ Time Charge_Get_TimeCharge(int Selection){
     }
 }
 
-char* Charge_Get_Type(int Selection){
+char* Charge_Get_Type_ByNumber(int Selection){
     Charge *Pointer = Charge_FirstCharge;
     if(Selection < 1 || Selection > ChargeQuantity)
         return NULL;
@@ -275,7 +275,7 @@ char* Charge_Get_Type(int Selection){
     }
 }
 
-int Charge_Get_Cost(int Selection){
+int Charge_Get_Cost_ByNumber(int Selection){
     Charge *Pointer = Charge_FirstCharge;
     if(Selection < 1 || Selection > ChargeQuantity)
         return 0;
@@ -287,28 +287,28 @@ int Charge_Get_Cost(int Selection){
 }
 
 void Charge_Set_CI(int Selection, int CI){
-    Charge * Charge = Charge_Get_Charge(Selection);
+    Charge * Charge = Charge_Get_ByNumber(Selection);
     if(Charge == NULL)
         return;
     Charge->CI = CI;
 }
 
 void Charge_Set_TimeCharge(int Selection, Time TimeCharge){
-    Charge * Charge = Charge_Get_Charge(Selection);
+    Charge * Charge = Charge_Get_ByNumber(Selection);
     if(Charge == NULL)
         return;
     Time_Copy(&Charge->TimeCharge, TimeCharge);
 }
 
 void Charge_Set_Type(int Selection, char* Type){
-    Charge * Charge = Charge_Get_Charge(Selection);
+    Charge * Charge = Charge_Get_ByNumber(Selection);
     if(Charge == NULL)
         return;
     strcpy(Charge->Type, Type);
 }
 
 void Charge_Set_Cost(int Selection, int Cost){
-    Charge * Charge = Charge_Get_Charge(Selection);
+    Charge * Charge = Charge_Get_ByNumber(Selection);
     if(Charge == NULL)
         return;
     Charge->Cost = Cost;
@@ -316,7 +316,7 @@ void Charge_Set_Cost(int Selection, int Cost){
 
 //-------------------Search and Find---------------------
 
-int Charge_Search_CI(int CI){
+int Charge_Search_ByCI(int CI){
     Charge * Pointer = Charge_FirstCharge;
     while(Pointer){
         if(Pointer->CI == CI)
@@ -326,7 +326,7 @@ int Charge_Search_CI(int CI){
     return 0;
 }
 
-Charge ** Charge_Search_CI_ByAllPointers(int CI){
+Charge ** Charge_Search_ByCI_AllPointers(int CI){
     Charge * Pointer = Charge_FirstCharge;
     Charge ** Found = (Charge**) malloc(sizeof(Charge*));
     int FoundQuantity = 0;
