@@ -5,8 +5,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "Screen.h"
 #include "Console.h"
 #include "Guest.h"
+#include "Charge.h"
 #include "Room.h"
 #include "Reservation.h"
 
@@ -22,10 +24,9 @@ int Application_Menu_Guest();
 int Application_Menu_Guest_New(int CI);
 void Application_Menu_Guest_NewFormReservation(Reservation * reservation);
 int Application_Menu_Guest_Edit(Guest * Pointer);
+void Application_Menu_Guest_Out(Guest * Pointer);
 void Application_Menu_Guest_ShowAll();
 
-void ScreenResource_DivitionBar(int Width, int Index, int JumpLine);
-void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine);
 
 //----------------------FUNCTIONS------------------------
 
@@ -788,10 +789,7 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 		Console_Input_Int(&Selection);
 		switch(Selection){
 			case -1:
-				Guest_Delete_ByPointer(Pointer);
-				printf("\t HUESPED ELIMINADO, presione ENTER para continuar.\n");
-				Guest_File_Save();
-				Console_Pause();
+				Application_Menu_Guest_Out(Pointer);
 				return 0;
 				break;
 			case 1:
@@ -840,6 +838,42 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 	return 0;
 }
 
+
+void Application_Menu_Guest_Out(Guest * Pointer){
+	while(1){
+		Reservation_File_Load();
+		Guest_File_Load();
+		Room_File_Load();
+		Charge_File_Load();
+
+		Console_Clear();
+		char letter;
+		puts("");
+		ScreenResource_DivitionBar_Double(41,1,1);
+		printf("\t             | ADVERTENCIA |\n");
+		printf("\t         -> SALIDA DE HUESPED <-\n");
+		ScreenResource_DivitionBar_Double(41,1,2);
+		Charge_Show_BillByPointer(Pointer);
+		printf("\n\tSe procesara la salida de un HUESPED, esto");
+		printf("\n\tlimpiara del sistema sus cargos y liberara");
+		printf("\n\tsu habitacion, dejandola disponible.\n");
+		printf("\n\tQuiere continuar con este proceso? [S/N]: ");
+		letter = getc(stdin);
+		while(getchar()!='\n');
+		if(letter == 's' || letter == 'S'){
+			Charge_Delete_ByAllPointers(Charge_Search_ByCI_AllPointers(Pointer->CI));
+			Guest_Delete_ByPointer(Pointer);
+			Charge_File_Save();
+			Guest_File_Save();
+			puts("\n\tOPERACION REALIZADA EXITOSAMENTE, presione ENTER para continuar...");
+			Console_Pause();
+			break;
+		}
+		else if(letter == 'n' || letter == 'N')
+			break;
+	}
+}
+
 void Application_Menu_Guest_ShowAll(){
 	Reservation_File_Load();
 	Guest_File_Load();
@@ -867,31 +901,6 @@ void Application_Menu_Guest_ShowAll(){
 	printf("\tOpcion: ");
 	Console_Input_Int(&Selection);
 	Application_Menu_Guest_Edit(Guest_Get_Guest(Selection));
-}
-
-
-//==============================================================================
-
-void ScreenResource_DivitionBar(int Width, int Index, int JumpLine){
-	for(int i = 0; i < Index; i++)
-		printf("\t");
-
-	for(int i = 0; i < Width; i++)
-		printf("%c", 196);
-
-	for(int i = 0; i < JumpLine; i++)
-		printf("\n");
-}
-
-void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine){
-	for(int i = 0; i < Index; i++)
-		printf("\t");
-
-	for(int i = 0; i < Width; i++)
-		printf("%c", 205);
-
-	for(int i = 0; i < JumpLine; i++)
-		printf("\n");
 }
 
 #endif /* APPLICATION_H */

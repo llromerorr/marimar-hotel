@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include "Screen.h"
 #include "Time.h"
 
 int ReservationQuantity = 0;

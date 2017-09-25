@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "charge.h": "c",
+        "reservation.h": "c",
+        "stdio.h": "c"
+    }
+}

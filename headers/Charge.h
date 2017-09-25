@@ -1,9 +1,15 @@
 #ifndef CHARGE_H
 #define CHARGE_H
-
+    
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include "Screen.h"
+#include "Console.h"
 #include "Time.h"
+#include "Guest.h"
+#include "Room.h"
 
 int ChargeQuantity = 0;
 
@@ -336,11 +342,43 @@ Charge ** Charge_Search_ByCI_AllPointers(int CI){
             Found[FoundQuantity] = Pointer;
             FoundQuantity++;
             Found = realloc(Found, sizeof(Charge*) * (FoundQuantity + 1));
-        }
+		}
         Pointer = Pointer->Next;
-    }
-    Found[FoundQuantity] = NULL;
+	}
+	if(!FoundQuantity){
+		free(Pointer);
+		free(Found);
+		return NULL;
+	}
+	Found[FoundQuantity] = NULL;
     return Found;
+}
+
+ void Charge_Show_BillByPointer(Guest * guest){
+	if(guest == NULL)
+		return;
+
+	Charge** charges = Charge_Search_ByCI_AllPointers(guest->CI);
+	int CostTotal = 0;
+
+	if(!charges){
+		printf("\tCliente: %s %s\n\n", guest->Name, guest->LastName);
+		printf("\t%-4s %-20s %-13s\n","N", "CARGOS", "MONTO (BsF)");
+		ScreenResource_DivitionBar(42,1,1);
+		printf("\t\tSIN CARGOS REGISTRADOS\n");
+		ScreenResource_DivitionBar(42,1,1);
+		return;
+	}
+		
+	printf("\tCliente: %s %s\n\n", guest->Name, guest->LastName);
+	printf("\t%-4s %-20s %-13s\n","N", "CARGOS", "MONTO (BsF)");
+	ScreenResource_DivitionBar(42,1,1);
+	for(int i = 0; charges[i]; i++){
+		printf("\t%-4d %-20s %-13d\n", i+1, charges[i]->Type, charges[i]->Cost);
+		CostTotal += charges[i]->Cost;
+	}
+	ScreenResource_DivitionBar(42,1,1);
+	printf("\t%25s %dBsf\n", "TOTAL: ", CostTotal);
 }
 
 #endif /* CHARGE_H */
