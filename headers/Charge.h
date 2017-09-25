@@ -230,6 +230,8 @@ void Charge_Delete_ByPointer(Charge * Selection){
 }
 
 void Charge_Delete_ByAllPointers(Charge ** Selection){
+    if(!Selection)
+        return;
     for(int i = 0; Selection[i]; i++){
         Charge_Delete_ByPointer(Selection[i]);
     }
