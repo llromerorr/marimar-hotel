@@ -106,4 +106,58 @@ int Time_Get_Year(Time * time){
     return time->Year;
 }
 
+
+//-------------------Setters and Getters---------------------
+
+// Let the given two dates be "1-Feb-2000" and "1-Feb-2004"
+// dt1 = {1, 2, 2000};
+// dt2 = {1, 2, 2004};
+
+// Count number of days before dt1. Let this count be n1.
+// Every leap year adds one extra day (29 Feb) to total days.
+
+// n1 = 2000*365 + 31 + 1 + Number of leap years 
+
+// Count of leap years for a date 'd/m/y' can be calculated 
+// using following formula:
+// Number leap years 
+//              = y/4 - y/100 + y/400 if m > 2
+//              = (y-1)/4 - (y-1)/100 + (y-1)/400 if m <= 2
+// All above divisions must be done using integer arithmetic
+// so that the remainder is ignored.
+
+// For 01/01/2000, leap year count is 1999/4 - 1999/100 
+// + 1999/400 which is 499 - 19 + 4 = 484
+// Therefore n1 is 2000*365 + 31 + 1 + 484
+                                  
+// Similarly, count number of days before dt2. Let this
+// count be n2.
+
+// Finally return n2-n1
+int Time_DaysBetween(Time t1, Time t2){
+    const int monthDays[12] = {31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31};
+    
+    int lp1 = (t1.Month <= 2) 
+                ? (t1.Year-1)/4 - (t1.Year-1)/100 + (t1.Year-1)/400
+                : t1.Year/4 - t1.Year/100 + t1.Year/400;
+
+    int lp2 = (t2.Month <= 2) 
+                ? (t2.Year-1)/4 - (t2.Year-1)/100 + (t2.Year-1)/400
+                : t2.Year/4 - t2.Year/100 + t2.Year/400;
+ 
+    long int n1 = t1.Year*365 + t1.Day;
+    for (int i=0; i<t1.Month - 1; i++)
+        n1 += monthDays[i];
+    
+    n1 += lp1;
+
+    long int n2 = t2.Year*365 + t2.Day;
+    for (int i=0; i<t2.Month - 1; i++)
+        n2 += monthDays[i];
+    
+    n2 += lp2;
+    return (n2 - n1);
+}
+
 #endif /* TIME_H */
