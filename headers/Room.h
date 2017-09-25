@@ -9,6 +9,7 @@
 #include <stdbool.h>
 
 int RoomQuantity = 0;
+int RoomFree = 0;
 
 typedef struct Room{
     int     Number;
@@ -387,5 +388,14 @@ int * Room_Get_RoomFree(){
     return RoomFree;
 }
 
+int Room_Get_RoomFree_Quantity(){
+    int RoomsFree = 0;
+    int * Pointer = Room_Get_RoomFree();
+    
+    for(int i = 0; Pointer[i]; i++)
+        RoomsFree++;
+    
+    return RoomsFree;
+}
 
 #endif /* Room_H */

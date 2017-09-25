@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "Time.h"
 
+void Guest_File_Save();
+
 int GuestQuantity = 0;
 
 typedef struct Guest{
@@ -51,6 +53,16 @@ void Guest_New(char* Name,
     NewItem->CI = CI;
     NewItem->Number = Number;
     strcpy(NewItem->PayType, PayType);
+}
+
+void Guest_NewFormReservation(Reservation * rsv){
+    Guest_New(rsv->Name, rsv->LastName,
+            rsv->CI, rsv->Input,
+            rsv->Output, rsv->Number,
+            rsv->PayType);
+    Reservation_Delete_ByPointer(rsv);
+    Reservation_File_Save();
+    Guest_File_Save();
 }
 
 void Guest_New_Null(){

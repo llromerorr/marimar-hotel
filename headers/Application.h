@@ -12,6 +12,7 @@
 
 //----------------------PROTOTYPES-----------------------
 int Application_Menu_Main();
+
 int Application_Menu_Reservation();
 void Application_Menu_Reservation_ShowAll();
 int Application_Menu_Reservation_New(int CI);
@@ -19,6 +20,7 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer);
 
 int Application_Menu_Guest();
 int Application_Menu_Guest_New(int CI);
+void Application_Menu_Guest_NewFormReservation(Reservation * reservation);
 int Application_Menu_Guest_Edit(Guest * Pointer);
 void Application_Menu_Guest_ShowAll();
 
@@ -146,6 +148,7 @@ int Application_Menu_Main(){
 	Reservation_File_Load();
 	Guest_File_Load();
 	Room_File_Load();
+	Charge_File_Load();
 	Console_Clear();
 	puts("");
 	ScreenResource_DivitionBar_Double(62,1,0);
@@ -154,12 +157,10 @@ int Application_Menu_Main(){
 	ScreenResource_DivitionBar_Double(62,1,2);
 
 	printf("\t\t\t         MENU PRINCIPAL\n");
-	//ScreenResource_DivitionBar(22,6,0);
 	printf("\n\t[1] RESERVACIONES\t\t->\t[%-6d %-13s]\n", ReservationQuantity,"RESERVADAS"); 
 	printf("\t[2] HUESPEDES\t\t\t->\t[%-6d %-13s]\n", GuestQuantity, "OCUPADAS");
-	printf("\t[3] REPORTES MENSUALES\t\t->\t[%-6d %-13s]\n", 0, "BSF GANANCIAS");
+	printf("\t[3] CARGOS\t\t\t->\t[%-6d %-13s]\n", Room_Get_RoomFree_Quantity() , "LIBRES");
 	printf("\t[9] SALIR\n\n");
-	//ScreenResource_DivitionBar(62,1,2);
 	printf("\tOpcion: ");
 	
 	Console_Input_Int(&Selection);
@@ -196,6 +197,10 @@ int Application_Menu_Main(){
 int Application_Menu_Reservation(){
 	while(1){
 		Reservation_File_Load();
+		Guest_File_Load();
+		Room_File_Load();
+		Charge_File_Load();
+		
 		int Selection = 0;
 		Console_Clear();
 		puts("");
@@ -218,7 +223,11 @@ int Application_Menu_Reservation(){
 				return 0;
 				break;
 			default:
-				if(Reservation_Search_CI(Selection)){
+				if(Guest_Search_CI(Selection)){
+					puts("\n\tEl cliente ya esta hospedado");
+					Application_Pause();
+				}
+				else if(Reservation_Search_CI(Selection)){
 					Console_Clear();
 					Application_Menu_Reservation_Edit(
 						Reservation_Search_CI(Selection));
@@ -318,7 +327,7 @@ int Application_Menu_Reservation_New(int CI){
 			}
 			scanf("%d/%d", &Output.Month, &Output.Year);
 			while(getchar() != '\n');
-			if(!Time_Check(Output)){
+			if(!Time_Check(Output) || Time_Compare(Input, Output) == 1 || Time_Compare(Input, Output) == 0 ){
 				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
 				Output = Time_Null();
 				Console_Pause();
@@ -420,7 +429,7 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 		puts("\t [5]  Cambiar Fecha Salida");
 		puts("\t [6]  Cambiar N. Habitacion");
 		puts("\t [7]  Cambiar Tipo de Pago\n");
-		puts("\t -1] ELIMINAR RESERVACION");
+		puts("\t -1] CANCELAR RESERVACION");
 		puts("\t [8] GUARDAR CAMBIOS");
 		printf("\t [9] SALIR\n\n");
 		printf("\t Opcion: ");
@@ -429,7 +438,7 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 		switch(Selection){
 			case -1:
 				Reservation_Delete_ByPointer(Pointer);
-				printf("\tReservacion ELIMINADA, presione ENTER para continuar.\n");
+				printf("\t Reservacion ELIMINADA, presione ENTER para continuar.\n");
 				Reservation_File_Save();
 				Console_Pause();
 				return 0;
@@ -481,6 +490,11 @@ int Application_Menu_Reservation_Edit(Reservation * Pointer){
 }
 
 void Application_Menu_Reservation_ShowAll(){
+	Reservation_File_Load();
+	Guest_File_Load();
+	Room_File_Load();
+	Charge_File_Load();
+
 	Console_Clear();
 	int Selection = 0;
 	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
@@ -507,14 +521,18 @@ void Application_Menu_Reservation_ShowAll(){
 //-----------------Guest MENUS-----------------
 
 int Application_Menu_Guest(){
-	while(1){
+	while(1){	
+		Reservation_File_Load();
 		Guest_File_Load();
+		Room_File_Load();
+		Charge_File_Load();
+
 		int Selection = 0;
 		Console_Clear();
 		puts("");
 		ScreenResource_DivitionBar_Double(62,1,0);
 		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
-		printf("\t\t\t        -> HUESPEDES <-\n");
+		printf("\t\t\t          -> HUESPEDES <-\n");
 		ScreenResource_DivitionBar_Double(62,1,2);
 		puts("\t[1] MOSTRAR HUESPEDES");
 		puts("\t[9] VOLVER\n");
@@ -531,10 +549,13 @@ int Application_Menu_Guest(){
 				return 0;
 				break;
 			default:
-				if(Guest_Search_CI(Selection)){
+				if(Reservation_Search_CI(Selection)){
+					//DKLAJDHFKJHADSFLKJHASDFLKJHADSFLKJHASDFKJHASDFKJADFKLJHADSFKJHSDFKHSADFJHADSFKJHASDFLKJHADSF
+					Application_Menu_Guest_NewFormReservation(Reservation_Search_CI(Selection));
+				}
+				else if(Guest_Search_CI(Selection)){
 					Console_Clear();
-					Application_Menu_Guest_Edit(
-						Guest_Search_CI(Selection));
+					Application_Menu_Guest_Edit(Guest_Search_CI(Selection));
 				}
 				else
 					Application_Menu_Guest_New(Selection);
@@ -543,7 +564,38 @@ int Application_Menu_Guest(){
 	return 0;
 }
 
-int Application_Menu_Guest_New(int CI){	
+void Application_Menu_Guest_NewFormReservation(Reservation * reservation){
+	while(1){
+		Console_Clear();
+		char letter;
+		puts("");
+		ScreenResource_DivitionBar_Double(41,1,1);
+		printf("\t             | ADVERTENCIA |\n");
+		ScreenResource_DivitionBar_Double(41,1,2);
+		Reservation_Show(reservation);
+		printf("\n\tEl cliente ya posee una RESERVACION, sera");
+		printf("\n\tmovido a la lista de HUESPEDES.\n");
+		printf("\n\tQuiere realizar esta operacion? [S/N]: ");
+		letter = getc(stdin);
+		while(getchar()!='\n');
+		if(letter == 's' || letter == 'S'){
+			Guest_NewFormReservation(reservation);
+			printf("\n\tOPERACION REALIZADA EXITOSAMENTE\n");
+			puts("\tPresione ENTER para continuar...");
+			Console_Pause();
+			break;
+		}
+		else if(letter == 'n' || letter == 'N')
+			break;
+	}
+}
+
+int Application_Menu_Guest_New(int CI){
+	if(!Room_Get_RoomFree()){
+		Application_Menu_Error_NoFreeRooms();
+		return 0;
+	}
+
 	char Name[30] = "";
     char LastName[30] = "";
     Time Input = Time_Null();
@@ -556,7 +608,7 @@ int Application_Menu_Guest_New(int CI){
 		puts("");
 		ScreenResource_DivitionBar_Double(62,1,0);
 		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
-		printf("\t\t\t              HUESPEDES\n");	
+		printf("\t\t\t              HUESPEDES\n");
 		printf("\t\t\t         -> NUEVO HUESPED <-\n");
 		ScreenResource_DivitionBar_Double(62,1,2);
 
@@ -626,9 +678,9 @@ int Application_Menu_Guest_New(int CI){
 			}
 			scanf("%d/%d", &Output.Month, &Output.Year);
 			while(getchar() != '\n');
-			if(!Time_Check(Output)){
+			if(!Time_Check(Output) || Time_Compare(Input, Output) == 1 || Time_Compare(Input, Output) == 0 ){
 				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
-				Input = Time_Null();
+				Output = Time_Null();
 				Console_Pause();
 				continue;
 			}
@@ -647,7 +699,23 @@ int Application_Menu_Guest_New(int CI){
 				Console_Pause();
 				return 0;
 			}
-			continue;
+
+			int *RoomFree = Room_Get_RoomFree();
+			bool NumberIsOk = false;
+			for(int i = 0; RoomFree[i]; i++)
+				if(Number == RoomFree[i])
+					NumberIsOk = true;
+			if(!NumberIsOk){
+				printf("\n\t*Habitacion %d no disponible*\n", Number);
+				printf("\n\tDisponibles: [ ");
+				for(int i = 0; RoomFree[i]; i++)
+					printf("%d ", RoomFree[i]);
+				printf("]\n");
+				printf("\n\tPresione ENTER para continuar...\n");
+				Number = -1;
+				Console_Pause();
+				continue;
+			}
 		}
 		else
 			printf("%d\n", Number);
@@ -670,7 +738,7 @@ int Application_Menu_Guest_New(int CI){
 
 	Guest_New(Name, LastName, CI, Input, Output, Number, PayType);
 	Guest_File_Save();
-	puts("\n\tHospedaje CREADO EXITOSAMENTE, presione ENTER para continuar...");
+	puts("\n\tHOSPEDAJE CREADO EXITOSAMENTE, presione ENTER para continuar...");
 	Console_Pause();
 	return 0;
 }
@@ -712,7 +780,7 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 		puts("\t [5]  Cambiar Fecha Salida");
 		puts("\t [6]  Cambiar N. Habitacion");
 		puts("\t [7]  Cambiar Tipo de Pago\n");
-		puts("\t -1] ELIMINAR HUESPED");
+		puts("\t -1] SALIDA DEL HUESPED");
 		puts("\t [8] GUARDAR CAMBIOS");
 		printf("\t [9] SALIR\n\n");
 		printf("\t Opcion: ");
@@ -721,7 +789,7 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 		switch(Selection){
 			case -1:
 				Guest_Delete_ByPointer(Pointer);
-				printf("\tHUESPED ELIMINADO, presione ENTER para continuar.\n");
+				printf("\t HUESPED ELIMINADO, presione ENTER para continuar.\n");
 				Guest_File_Save();
 				Console_Pause();
 				return 0;
@@ -773,6 +841,11 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 }
 
 void Application_Menu_Guest_ShowAll(){
+	Reservation_File_Load();
+	Guest_File_Load();
+	Room_File_Load();
+	Charge_File_Load();
+
 	Console_Clear();
 	int Selection = 0;
 	printf("\n\t\t\t\t    "); ScreenResource_DivitionBar_Double(42,0,1);
