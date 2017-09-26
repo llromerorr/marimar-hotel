@@ -28,7 +28,9 @@ void Application_Menu_Guest_Out(Guest * Pointer);
 void Application_Menu_Guest_ShowAll();
 
 int Application_Menu_Charge();
-
+int Application_Menu_Charge_New(int CI);
+void Application_Menu_Charge_ShowAll();
+void Application_Menu_Charge_Edit(Charge * charge);
 //----------------------FUNCTIONS------------------------
 
 void Application_Pause(){
@@ -899,8 +901,151 @@ void Application_Menu_Guest_ShowAll(){
 	Application_Menu_Guest_Edit(Guest_Get_Guest(Selection));
 }
 
+void Application_Menu_Charge_ShowAll(){
+	Charge_File_Load();
+
+	Console_Clear();
+	int Selection = 0;
+	printf("\n"); ScreenResource_DivitionBar_Double(54,1,1);
+	printf("\n\t         SISTEMA ADMINISTRATIVO HOTEL MARIMAR");
+	printf("\n\t                       CARGOS");
+	printf("\n\t                  -> REGISTRADOS <-\n");
+	printf("\n"); ScreenResource_DivitionBar_Double(54,1,1);
+	printf("\n\t                  CARGOS REGISTRADOS\n\n\n");
+	printf("\t%-5s %-10s %-12s %-15s %-10s\n",
+			"N", "CI", "FECHA","TIPO", "COSTO");
+
+	ScreenResource_DivitionBar(54,1,1);
+	Charge_Show_All();
+	ScreenResource_DivitionBar(54,1,1);
+	
+	printf("\n\t[ENTER]   VOLVER\n");
+	printf("\t[-NUMERO] ELIMINAR CARGO\n\n");
+	printf("\tOpcion: ");
+	Console_Input_Int(&Selection);
+	if(Charge_Delete_ByNumber(Selection * -1)){
+		Charge_File_Save();
+		puts("\tCARGO ELIMINADO, presione ENTER para continuar...");
+		Console_Pause();
+	}
+		
+}
+
+int Application_Menu_Charge_New(int CI){
+	Time TimeCharge = Time_Null();
+	char Type[30] = "";
+	int Cost = -1;
+	Guest * guest = Guest_Search_CI(CI);
+
+	while(1){
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t               CARGOS\n");
+		printf("\t\t\t         -> NUEVO CARGOS <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+
+		printf("\t[0] Cancelar\n\n");
+		printf("\tCEDULA:\t\t%d\n", CI);
+		printf("\tTipo:\t\t");
+		if(strcmp(Type, "") == 0){
+			scanf("%s", Type);
+			while(getchar() != '\n');
+			if(strcmp(Type, "0") == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}
+		else{
+			puts(Type);
+		}
+
+		printf("\tFecha(dia/mes/ano): ");
+		if(Time_Compare(TimeCharge, Time_Null()) == 0){
+			scanf("%d/", &TimeCharge.Day);
+			if(TimeCharge.Day == 0){
+				while(getchar() != '\n');
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			scanf("%d/%d", &TimeCharge.Month, &TimeCharge.Year);
+			while(getchar() != '\n');
+			if(!Time_Check(TimeCharge) || Time_Compare(guest->Input, TimeCharge) == 1){
+				puts("\n\t[FECHA INVALIDA] Presione ENTER para reintentarlo...");
+				TimeCharge = Time_Null();
+				Console_Pause();
+				continue;
+			}
+			continue;
+		}
+		else{
+			puts(Time_ToString(TimeCharge));
+		}
+
+		printf("\tCosto del Servicio: ");
+		if(Cost == -1){
+			scanf("%d", &Cost);
+			while(getchar() != '\n');
+			if(Cost == 0){
+				puts("\n\t[CREACION CANCELADA] Presione ENTER para salir...");
+				Console_Pause();
+				return 0;
+			}
+			continue;
+		}
+		else
+			printf("%d\n", Cost);
+		break; // Continuar a la creacion
+	}
+
+	Charge_New(CI, TimeCharge, Type, Cost);
+	Charge_File_Save();
+	puts("\n\tCARGO CREADO EXITOSAMENTE, presione ENTER para continuar...");
+	Console_Pause();
+	return 0;
+}
 
 int Application_Menu_Charge(){
+	while(1){
+		Reservation_File_Load();
+		Guest_File_Load();
+		Room_File_Load();
+		Charge_File_Load();
+		
+		int Selection = 0;
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t\tSISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t\t            -> CARGOS <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+		puts("\t[1] Mostrar Cargos");
+		puts("\t[9] Volver\n");
+		printf("\tCI: ");
+		
+		Console_Input_Int(&Selection);
+		switch(Selection){
+			case 0:
+				break;
+			case 1:
+				Application_Menu_Charge_ShowAll();
+				break;
+			case 9:
+				return 0;
+				break;
+			default:
+				if(Guest_Search_CI(Selection))
+					Application_Menu_Charge_New(Selection);
+				else{
+					puts("\n\tEL CLIENTE NO ESTA HOSPEDADO, presione ENTER para continuar...");
+					Console_Pause();
+				}	
+		}
+	}
 	return 0;
 }
 

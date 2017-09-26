@@ -54,11 +54,11 @@ void Charge_New_Null(){
 void Charge_Show_All(){
     Charge* p = Charge_FirstCharge;
     for(int i = 1; p; i++){
-        printf("%d) ", i);
-        printf("%d\t", p->CI);
-        printf("%s\t", Time_ToString(p->TimeCharge));
-        printf("%s\t", p->Type);
-        printf("%d\n", p->Cost);
+        printf("\t%-5d ", i);
+        printf("%-10d ", p->CI);
+        printf("%-12s ", Time_ToString(p->TimeCharge));
+        printf("%-15s ", p->Type);
+        printf("%-10d\n", p->Cost);
         p = p->Next;
     }
 }
@@ -161,11 +161,11 @@ void Charge_File_Clear(){
     fclose(file);
 }
 
-void Charge_Delete_ByNumber(int Selection){
+int Charge_Delete_ByNumber(int Selection){
     Charge *Pointer = NULL;
 
     if(Selection < 1 || Selection > ChargeQuantity){
-        return;
+        return 0;
     }
     else if(Selection - 1 == 0){
         Pointer = Charge_FirstCharge;
@@ -179,6 +179,7 @@ void Charge_Delete_ByNumber(int Selection){
         }
         free(Pointer);
         ChargeQuantity--;
+        return 1;
     }
     else if(Selection == ChargeQuantity){
         Pointer = Charge_LastCharge;
@@ -186,6 +187,7 @@ void Charge_Delete_ByNumber(int Selection){
         Charge_LastCharge = Charge_LastCharge->Previous;
         free(Pointer);
         ChargeQuantity--;
+        return 1;
     }
     else{
         Pointer = Charge_FirstCharge;
@@ -196,6 +198,7 @@ void Charge_Delete_ByNumber(int Selection){
         Pointer->Previous->Next = Pointer->Next;
         free(Pointer);
         ChargeQuantity--;
+        return 1;
     }
 }
 
