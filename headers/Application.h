@@ -27,6 +27,7 @@ int Application_Menu_Guest_Edit(Guest * Pointer);
 void Application_Menu_Guest_Out(Guest * Pointer);
 void Application_Menu_Guest_ShowAll();
 
+int Application_Menu_Charge();
 
 //----------------------FUNCTIONS------------------------
 
@@ -160,7 +161,8 @@ int Application_Menu_Main(){
 	printf("\t\t\t         MENU PRINCIPAL\n");
 	printf("\n\t[1] RESERVACIONES\t\t->\t[%-6d %-13s]\n", ReservationQuantity,"RESERVADAS"); 
 	printf("\t[2] HUESPEDES\t\t\t->\t[%-6d %-13s]\n", GuestQuantity, "OCUPADAS");
-	printf("\t[3] CARGOS\t\t\t->\t[%-6d %-13s]\n", Room_Get_RoomFree_Quantity() , "LIBRES");
+	printf("\t[3] CARGOS\t\t\t\t[%-6d %-13s]\n", Room_Get_RoomFree_Quantity() , "LIBRES");
+	printf("\t[4] REPORTES\n\n");
 	printf("\t[9] SALIR\n\n");
 	printf("\tOpcion: ");
 	
@@ -175,6 +177,7 @@ int Application_Menu_Main(){
 			return 1;
 			break;
 		case 3:
+			Application_Menu_Charge();
 			return 1;
 			break;
 		case 4:
@@ -551,7 +554,6 @@ int Application_Menu_Guest(){
 				break;
 			default:
 				if(Reservation_Search_CI(Selection)){
-					//DKLAJDHFKJHADSFLKJHASDFLKJHADSFLKJHASDFKJHASDFKJADFKLJHADSFKJHSDFKHSADFJHADSFKJHASDFLKJHADSF
 					Application_Menu_Guest_NewFormReservation(Reservation_Search_CI(Selection));
 				}
 				else if(Guest_Search_CI(Selection)){
@@ -790,7 +792,6 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 		switch(Selection){
 			case -1:
 				Application_Menu_Guest_Out(Pointer);
-				return 0;
 				break;
 			case 1:
 				printf("\t Nombre: ");
@@ -841,11 +842,6 @@ int Application_Menu_Guest_Edit(Guest * Pointer){
 
 void Application_Menu_Guest_Out(Guest * Pointer){
 	while(1){
-		Reservation_File_Load();
-		Guest_File_Load();
-		Room_File_Load();
-		Charge_File_Load();
-
 		Console_Clear();
 		char letter;
 		puts("");
@@ -901,6 +897,11 @@ void Application_Menu_Guest_ShowAll(){
 	printf("\tOpcion: ");
 	Console_Input_Int(&Selection);
 	Application_Menu_Guest_Edit(Guest_Get_Guest(Selection));
+}
+
+
+int Application_Menu_Charge(){
+	return 0;
 }
 
 #endif /* APPLICATION_H */

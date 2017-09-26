@@ -360,27 +360,32 @@ Charge ** Charge_Search_ByCI_AllPointers(int CI){
 	if(guest == NULL)
 		return;
 
-	Charge** charges = Charge_Search_ByCI_AllPointers(guest->CI);
-	int CostTotal = 0;
-
+    Charge** charges = Charge_Search_ByCI_AllPointers(guest->CI);
+    Room *room = Room_Search_ByNumber(guest->Number);
+    long GuestDays = Time_DaysBetween(guest->Input, guest->Output);
+    int CostTotal = GuestDays * room->Cost;
+    
 	if(!charges){
 		printf("\tCliente: %s %s\n\n", guest->Name, guest->LastName);
 		printf("\t%-4s %-20s %-13s\n","N", "CARGOS", "MONTO (BsF)");
-		ScreenResource_DivitionBar(42,1,1);
-		printf("\t\tSIN CARGOS REGISTRADOS\n");
-		ScreenResource_DivitionBar(42,1,1);
+        ScreenResource_DivitionBar(42,1,1);
+        printf("\t%-4d %-20s %-13ld\n", 1, "Alojamiento",GuestDays * room->Cost);
+		printf("\t<Sin cargos adicionales>\n");
+        ScreenResource_DivitionBar(42,1,1);
+        printf("\t%25s %d\n", "TOTAL: ", CostTotal);
 		return;
 	}
 		
 	printf("\tCliente: %s %s\n\n", guest->Name, guest->LastName);
 	printf("\t%-4s %-20s %-13s\n","N", "CARGOS", "MONTO (BsF)");
-	ScreenResource_DivitionBar(42,1,1);
+    ScreenResource_DivitionBar(42,1,1);
+    printf("\t%-4d %-20s %-13ld\n", 1, "Alojamiento",GuestDays * room->Cost);
 	for(int i = 0; charges[i]; i++){
-		printf("\t%-4d %-20s %-13d\n", i+1, charges[i]->Type, charges[i]->Cost);
+		printf("\t%-4d %-20s %-13d\n", i+2, charges[i]->Type, charges[i]->Cost);
 		CostTotal += charges[i]->Cost;
 	}
 	ScreenResource_DivitionBar(42,1,1);
-	printf("\t%25s %dBsf\n", "TOTAL: ", CostTotal);
+	printf("\t%25s %d\n", "TOTAL: ", CostTotal);
 }
 
 #endif /* CHARGE_H */
