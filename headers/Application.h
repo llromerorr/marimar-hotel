@@ -1092,15 +1092,23 @@ int Application_Menu_Report_Show(int imonth){
 
 	int DaysReservation = 0;
 	int DaysGuest = 0;
-	printf("\n\t%-15s %-10s\n", "HHABITACION", "DIAS");
+	printf("\n\t%-15s %-10s\n", "HABITACION", "DIAS");
 	ScreenResource_DivitionBar(20,1,1);
 	while(reservation){
 		if(reservation->Input.Month == imonth){
 			if(reservation->Output.Month == imonth){
-				DaysReservation += Time_DaysBetween(reservation->Input, reservation->Output);
-				printf("\t%-15d %-10d\n", reservation->Number, Time_DaysBetween(reservation->Input, reservation->Output));
-				Total += Time_DaysBetween(reservation->Input, reservation->Output) * 
-					Room_Get_Cost_ByNumber(reservation->Number);
+				if(reservation->Input.Year != reservation->Output.Year){
+					Time tNull = Time_New(1, (reservation->Output.Month == 12) ? 1 : reservation->Output.Month + 1, 
+					(reservation->Input.Year == 12) ? reservation->Input.Year + 1 : reservation->Input.Year);
+					DaysReservation += Time_DaysBetween(reservation->Input, tNull);
+					printf("\t%-15d %-10d\n", reservation->Number, Time_DaysBetween(reservation->Input, tNull));
+					Total += Time_DaysBetween(reservation->Input, tNull) * Room_Get_Cost_ByNumber(reservation->Number);
+				}
+				else{
+					DaysReservation += Time_DaysBetween(reservation->Input, reservation->Output);
+					printf("\t%-15d %-10d\n", reservation->Number, Time_DaysBetween(reservation->Input, reservation->Output));
+					Total += Time_DaysBetween(reservation->Input, reservation->Output) * Room_Get_Cost_ByNumber(reservation->Number);
+				}
 			}
 			else if(reservation->Output.Month > imonth){
 				Time tNull = Time_New(1, reservation->Input.Month + 
@@ -1117,9 +1125,18 @@ int Application_Menu_Report_Show(int imonth){
 	while(guest){
 		if(guest->Input.Month == imonth){
 			if(guest->Output.Month == imonth){
-				DaysGuest += Time_DaysBetween(guest->Input, guest->Output);
-				printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, guest->Output));
-				Total += Time_DaysBetween(guest->Input, guest->Output) * Room_Get_Cost_ByNumber(guest->Number);
+				if(guest->Input.Year != guest->Output.Year){
+					Time tNull = Time_New(1, (guest->Output.Month == 12) ? 1 : guest->Output.Month + 1, 
+					(guest->Input.Year == 12) ? guest->Input.Year + 1 : guest->Input.Year);
+					DaysGuest += Time_DaysBetween(guest->Input, tNull);
+					printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, tNull));
+					Total += Time_DaysBetween(guest->Input, tNull) * Room_Get_Cost_ByNumber(guest->Number);
+				}
+				else{
+					DaysGuest += Time_DaysBetween(guest->Input, guest->Output);
+					printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, guest->Output));
+					Total += Time_DaysBetween(guest->Input, guest->Output) * Room_Get_Cost_ByNumber(guest->Number);
+				}
 			}
 			else if(guest->Output.Month > imonth){
 				Time tNull = Time_New(1, guest->Input.Month + 
@@ -1127,7 +1144,7 @@ int Application_Menu_Report_Show(int imonth){
 					guest->Input.Year);
 				DaysGuest += Time_DaysBetween(guest->Input, tNull);
 				printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, tNull));
-				Total += Time_DaysBetween(guest->Input, tNull) * Room_Get_Cost_ByNumber(reservation->Number);
+				Total += Time_DaysBetween(guest->Input, tNull) * Room_Get_Cost_ByNumber(guest->Number);
 			}
 		}
 		guest = guest->Next;
