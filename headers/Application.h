@@ -31,6 +31,9 @@ int Application_Menu_Charge();
 int Application_Menu_Charge_New(int CI);
 void Application_Menu_Charge_ShowAll();
 void Application_Menu_Charge_Edit(Charge * charge);
+
+int Application_Menu_Report();
+int Application_Menu_Report_Show(int imonth);
 //----------------------FUNCTIONS------------------------
 
 void Application_Pause(){
@@ -183,9 +186,7 @@ int Application_Menu_Main(){
 			return 1;
 			break;
 		case 4:
-			return 1;
-			break;
-		case 5:
+			Application_Menu_Report();
 			return 1;
 			break;
 		case 9:
@@ -1046,6 +1047,94 @@ int Application_Menu_Charge(){
 				}	
 		}
 	}
+	return 0;
+}
+
+int Application_Menu_Report(){
+	while(1){
+		Reservation_File_Load();
+		Guest_File_Load();
+		Room_File_Load();
+		Charge_File_Load();
+		
+		int Selection = 0;
+		Console_Clear();
+		puts("");
+		ScreenResource_DivitionBar_Double(62,1,0);
+		printf("\n\t\t      SISTEMA ADMINISTRATIVO HOTEL MARIMAR\n");
+		printf("\t\t                 -> REPORTES <-\n");
+		ScreenResource_DivitionBar_Double(62,1,2);
+		puts("\t[-1] Volver\n");
+		printf("\tMes[1-12]: ");
+		
+		Console_Input_Int(&Selection);
+		if(Selection == -1)
+			break;
+		else if(Selection < 1 || Selection > 12){
+			puts("\n\tEL MES NO EXISTE, presione ENTER para continuar...");
+			Console_Pause();
+		}
+		else{
+			Application_Menu_Report_Show(Selection);
+		}
+	}
+	return 0;
+}
+int Application_Menu_Report_Show(int imonth){
+	Reservation_File_Load();
+	Guest_File_Load();
+	Charge_File_Load();
+	Room_File_Load();
+
+	int Total = 0;
+	Reservation * reservation = Reservation_FirstReservation;
+	Guest * guest = Guest_FirstGuest;
+
+	int DaysReservation = 0;
+	int DaysGuest = 0;
+	printf("\n\t%-15s %-10s\n", "HHABITACION", "DIAS");
+	ScreenResource_DivitionBar(20,1,1);
+	while(reservation){
+		if(reservation->Input.Month == imonth){
+			if(reservation->Output.Month == imonth){
+				DaysReservation += Time_DaysBetween(reservation->Input, reservation->Output);
+				printf("\t%-15d %-10d\n", reservation->Number, Time_DaysBetween(reservation->Input, reservation->Output));
+				Total += Time_DaysBetween(reservation->Input, reservation->Output) * 
+					Room_Get_Cost_ByNumber(reservation->Number);
+			}
+			else if(reservation->Output.Month > imonth){
+				Time tNull = Time_New(1, reservation->Input.Month + 
+					(reservation->Output.Month - reservation->Input.Month), 
+					reservation->Input.Year);
+				DaysReservation += Time_DaysBetween(reservation->Input, tNull);
+				printf("\t%-15d %-10d\n", reservation->Number, Time_DaysBetween(reservation->Input, tNull));
+				Total += Time_DaysBetween(reservation->Input, tNull) * Room_Get_Cost_ByNumber(reservation->Number);
+			}
+		}
+		reservation = reservation->Next;
+	}
+
+	while(guest){
+		if(guest->Input.Month == imonth){
+			if(guest->Output.Month == imonth){
+				DaysGuest += Time_DaysBetween(guest->Input, guest->Output);
+				printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, guest->Output));
+				Total += Time_DaysBetween(guest->Input, guest->Output) * Room_Get_Cost_ByNumber(guest->Number);
+			}
+			else if(guest->Output.Month > imonth){
+				Time tNull = Time_New(1, guest->Input.Month + 
+					(guest->Output.Month - guest->Input.Month), 
+					guest->Input.Year);
+				DaysGuest += Time_DaysBetween(guest->Input, tNull);
+				printf("\t%-15d %-10d\n", guest->Number, Time_DaysBetween(guest->Input, tNull));
+				Total += Time_DaysBetween(guest->Input, tNull) * Room_Get_Cost_ByNumber(reservation->Number);
+			}
+		}
+		guest = guest->Next;
+	}
+	ScreenResource_DivitionBar(20,1,1);
+	printf("\tTOTAL: %-d Bsf\n", Total);
+	Console_Pause();
 	return 0;
 }
 

@@ -259,16 +259,21 @@ char* Room_Get_Type_ByNumber(int Selection){
     }
 }
 
-int Room_Get_Cost_ByNumber(int Selection){
-    Room *Pointer = Room_FirstRoom;
-    if(Selection < 1 || Selection > RoomQuantity)
-        return 0;
-    else{
-        for(int i = 2; i <= Selection; i++)
-            Pointer = Pointer->Next;
-        return Pointer->Cost;
-    }
-}
+// Esta funcion puede llegar a ser utilzada, pero
+// remplazada por una que funciona con el numero
+// de habitacion, y no de posicion en la lista
+// que la contiene
+
+// int Room_Get_Cost_ByNumber(int Selection){
+//     Room *Pointer = Room_FirstRoom;
+//     if(Selection < 1 || Selection > RoomQuantity)
+//         return 0;
+//     else{
+//         for(int i = 2; i <= Selection; i++)
+//             Pointer = Pointer->Next;
+//         return Pointer->Cost;
+//     }
+// }
 
 void Room_Set_Number(int Selection, int Number){
     Room * Room = Room_Get_ByNumber(Selection);
@@ -301,6 +306,11 @@ Room* Room_Search_ByNumber(int Number){
         Pointer = Pointer->Next;
     }
     return NULL;
+}
+
+int Room_Get_Cost_ByNumber(int Number){
+    Room * room = Room_Search_ByNumber(Number);
+    return room->Cost;
 }
 
 int * Room_Get_RoomBusy(){
