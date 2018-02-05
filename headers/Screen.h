@@ -15,7 +15,7 @@ void ScreenResource_DivitionBar(int Width, int Index, int JumpLine){
 		printf("\t");
 
 	for(int i = 0; i < Width; i++)
-		printf("%c", 196);
+		printf("-");
 
 	for(int i = 0; i < JumpLine; i++)
 		printf("\n");
@@ -26,7 +26,7 @@ void ScreenResource_DivitionBar_Double(int Width, int Index, int JumpLine){
 		printf("\t");
 
 	for(int i = 0; i < Width; i++)
-		printf("%c", 205);
+		printf("=");
 
 	for(int i = 0; i < JumpLine; i++)
 		printf("\n");

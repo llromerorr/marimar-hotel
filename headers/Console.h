@@ -19,7 +19,7 @@ void Console_Input_Int(int* var){
 }
 
 void Console_Clear(){
-    system("cls");
+    system("clear");
 }
 
 void Console_Pause(){
