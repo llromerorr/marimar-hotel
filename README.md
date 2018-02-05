@@ -1,4 +1,4 @@
-# MM17
+# Marimar Hotel
 Sistema que administra el registro de reservaciones y huéspedes, así como de la prestación de servicios especiales, a fin de ofrecer una mejor atención al cliente. 
 
 ## Pantalla de Bienvenida
